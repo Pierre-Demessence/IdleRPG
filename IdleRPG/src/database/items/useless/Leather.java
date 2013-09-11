@@ -2,10 +2,10 @@
  * Author : Pierre
  * Last Update : 11 sept. 2013 - 16:36:20
  */
-package database.items;
+package database.items.useless;
 
+import database.items.Type;
 import item.Item;
-import item.Type;
 
 // TODO: Auto-generated Javadoc
 /**

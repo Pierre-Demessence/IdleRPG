@@ -6,6 +6,7 @@ package item;
 
 import util.Formula;
 import character.Character;
+import database.items.Slot;
 
 // TODO: Auto-generated Javadoc
 /**

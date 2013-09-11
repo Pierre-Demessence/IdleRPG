@@ -7,8 +7,6 @@ package character;
 import item.Consumable;
 import item.Equipment;
 import item.Item;
-import item.Slot;
-import item.Type;
 import item.Weapon;
 
 import java.util.ArrayList;
@@ -26,6 +24,8 @@ import location.Shop;
 import util.Formula;
 import util.Logger;
 import database.GlobalFormula;
+import database.items.Slot;
+import database.items.Type;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -452,7 +452,7 @@ public abstract class Hero extends Character {
 
 		// TODO use the urge boolean.
 		for( final Consumable c : consumables ) {
-			final float coef = ( toGain / c.getLifeGain() ) - ( ( toGain - c.getLifeGain() ) / toGain );
+			final float coef = Math.min((float) c.getLifeGain() / toGain, 1.0f) - Math.max( ( (float) c.getLifeGain() - toGain ) / c.getLifeGain(), 0.0f);
 			if( coef > toUseCoef ) {
 				toUse = c;
 				toUseCoef = coef;
@@ -478,7 +478,7 @@ public abstract class Hero extends Character {
 
 		// TODO use the urge boolean.
 		for( final Consumable c : consumables ) {
-			final float coef = ( toGain / c.getManaGain() ) - ( ( toGain - c.getManaGain() ) / toGain );
+			final float coef = Math.min((float) c.getManaGain() / toGain, 1.0f) - Math.max( ( (float) c.getManaGain() - toGain ) / c.getManaGain(), 0.0f);
 			if( coef > toUseCoef ) {
 				toUse = c;
 				toUseCoef = coef;

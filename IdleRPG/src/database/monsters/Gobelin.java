@@ -11,7 +11,7 @@ import java.util.EnumMap;
 
 import character.Attribute;
 import character.Monster;
-import database.items.Leather;
+import database.items.useless.Leather;
 
 // TODO: Auto-generated Javadoc
 /**

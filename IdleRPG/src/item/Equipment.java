@@ -7,6 +7,7 @@ package item;
 import java.util.EnumMap;
 
 import character.Attribute;
+import database.items.Slot;
 
 // TODO: Auto-generated Javadoc
 /**

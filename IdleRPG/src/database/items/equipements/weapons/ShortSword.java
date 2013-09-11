@@ -1,6 +1,5 @@
 package database.items.equipements.weapons;
 
-import item.Type;
 import item.Weapon;
 
 import java.util.EnumMap;
@@ -8,6 +7,7 @@ import java.util.EnumMap;
 import util.Formula;
 import character.Attribute;
 import database.GlobalFormula;
+import database.items.Type;
 
 public class ShortSword extends Weapon {
 

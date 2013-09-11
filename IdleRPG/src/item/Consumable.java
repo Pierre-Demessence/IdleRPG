@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import util.Logger;
 import character.Hero;
+import database.items.Type;
 
 // TODO: Auto-generated Javadoc
 /**

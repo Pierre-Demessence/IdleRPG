@@ -6,6 +6,8 @@ package item;
 
 import java.util.Comparator;
 
+import database.items.Type;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Item.

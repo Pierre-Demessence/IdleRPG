@@ -2,7 +2,7 @@
  * Author : Pierre
  * Last Update : 11 sept. 2013 - 16:36:20
  */
-package item;
+package database.items;
 
 // TODO: Auto-generated Javadoc
 /**

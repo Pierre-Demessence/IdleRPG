@@ -6,7 +6,6 @@ package database.dungeons;
 
 import location.Dungeon;
 import database.monsters.Gobelin;
-import database.monsters.Orc;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,7 +19,7 @@ public class Cave extends Dungeon {
 	public Cave() {
 		super("Cave");
 		this.monsters.add(new Gobelin());
-		this.monsters.add(new Orc());
+		// this.monsters.add(new Orc());
 	}
 
 }
