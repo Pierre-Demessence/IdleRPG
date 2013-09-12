@@ -12,7 +12,12 @@ import database.items.Type;
 /**
  * The Class Item.
  */
-public abstract class Item {
+public abstract class Item implements Comparable<Item> {
+
+	@Override
+	public int compareTo(Item o) {
+		return this.getName().compareTo(o.getName());
+	}
 
 	/** The Constant VALUE_ORDER. */
 	public static final Comparator<Item>	VALUE_ORDER	= new Comparator<Item>() {

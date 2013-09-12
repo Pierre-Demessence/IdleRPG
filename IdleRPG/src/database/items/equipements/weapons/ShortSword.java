@@ -36,4 +36,9 @@ public class ShortSword extends Weapon {
 		return 20;
 	}
 
+	@Override
+	public int getLevel() {
+		return 1;
+	}
+
 }

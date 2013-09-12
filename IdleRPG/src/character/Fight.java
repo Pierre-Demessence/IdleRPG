@@ -75,14 +75,11 @@ public class Fight {
 	 */
 	public void endFight() {
 		Logger.log("Le combat est terminé.");
-		if( this.isEnded() ) {
-
-			if( this.hero.getLife() > 0 )
-				this.win();
-			else
-				this.loose();
-
-		} else
+		if( this.monster.isKO() )
+			this.win();
+		else if( this.hero.isKO() )
+			this.loose();
+		else
 			Logger.log(this.hero.getName() + " a fuit le combat !");
 		this.hero.setFight(null);
 	}
@@ -119,7 +116,7 @@ public class Fight {
 	 * @return true, if the fight is ended
 	 */
 	private boolean isEnded() {
-		return ( ( this.hero.getLife() == 0 ) || ( this.monster.getLife() == 0 ) );
+		return ( ( this.hero.isKO() ) || ( this.monster.isKO() ) );
 	}
 
 	/**
@@ -152,7 +149,8 @@ public class Fight {
 			for( final Loot l : this.monster.getLoots() )
 				if( l.test() ) {
 					Logger.log("Il trouve " + l.getQuantity() + " " + l.getItem().getName() + " !");
-					this.hero.inventoryAddItem(l.getItem(), l.getQuantity());
+					this.hero.addItem(l.getItem(), l.getQuantity());
 				}
+		this.hero.decreaseFightBeforeGoToShop();
 	}
 }

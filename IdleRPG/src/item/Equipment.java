@@ -36,4 +36,11 @@ public abstract class Equipment extends Item {
 	 */
 	public abstract EnumMap<Attribute, Integer> getAttributesBonus();
 
+	/**
+	 * The required level to equip this object.
+	 * 
+	 * @return
+	 */
+	public abstract int getLevel();
+
 }

@@ -4,14 +4,20 @@
  */
 package location;
 
+import item.Consumable;
+import item.Equipment;
 import item.Item;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.collections4.bag.HashBag;
 
 import util.Logger;
 import character.Hero;
+import database.items.Slot;
 import database.items.consumables.SmallLifePotion;
 import database.items.equipements.weapons.ShortSword;
 
@@ -78,7 +84,7 @@ public class Shop implements Location {
 		final int totalValue = (int) Math.floor(i.getValue() / 2) * n;
 		hero.addGold(+totalValue);
 		Logger.log(hero, "Je vend " + n + " " + i.getName() + " pour un total de " + totalValue + "po.");
-		hero.inventoryRemoveItem(i, n);
+		hero.removeItem(i, n);
 		this.items.add(i, n);
 	}
 
@@ -109,6 +115,26 @@ public class Shop implements Location {
 	 */
 	public Set<Item> getItems() {
 		return this.items.uniqueSet();
+	}
+
+	public HashSet<Consumable> getConsumables() {
+		final HashSet<Consumable> consos = new HashSet<>();
+		for( final Item i : this.items )
+			if( i instanceof Consumable )
+				consos.add((Consumable) i);
+		return consos;
+	}
+
+	public TreeSet<Equipment> getEquipments(Slot slot, int maxlevel) {
+		final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
+
+		for( final Item i : this.items )
+			if( i instanceof Equipment ) {
+				Equipment e = (Equipment) i;
+				if( ( slot == null || e.getSlot().equals(slot) ) && ( maxlevel == 0 || e.getLevel() <= maxlevel ) )
+					equipments.add(e);
+			}
+		return equipments;
 	}
 
 	/**
@@ -145,8 +171,8 @@ public class Shop implements Location {
 	public void sell(final Hero hero, final Item i, final int n) {
 		final int totalValue = i.getValue() * n;
 		hero.addGold(-totalValue);
-
-		hero.inventoryAddItem(i, n);
+		Logger.log(hero, "J'achète " + n + " " + i.getName() + " pour un total de " + totalValue + "po.");
+		hero.addItem(i, n);
 		this.items.remove(i, n);
 	}
 

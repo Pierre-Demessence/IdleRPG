@@ -32,6 +32,10 @@ public abstract class Character {
 		this.mana = this.getMaxMana();
 	}
 
+	public boolean isKO() {
+		return this.life <= 0;
+	}
+
 	/**
 	 * Instantiates a new character.
 	 * 

@@ -20,20 +20,48 @@ import database.items.Type;
 public abstract class Consumable extends Item {
 
 	/** The Constant LIGE_GAIN_ORDER. */
-	public static final Comparator<Consumable>	LIGE_GAIN_ORDER	= new Comparator<Consumable>() {
-																	@Override
-																	public int compare(final Consumable o1, final Consumable o2) {
-																		return o1.getLifeGain() - o2.getLifeGain();
-																	}
-																};
-	
+	public static final Comparator<Consumable>	LIFE_GAIN_ORDER				= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getLifeGain() - o2.getLifeGain();
+																				}
+																			};
+
+	public static final Comparator<Consumable>	LIFE_VALUE_RATIO_ORDER		= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getLifeGain() / o1.getValue() - o2.getLifeGain() / o2.getValue();
+																				}
+																			};
+
+	public static final Comparator<Consumable>	MANA_VALUE_RATIO_ORDER		= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getManaGain() / o1.getValue() - o2.getManaGain() / o2.getValue();
+																				}
+																			};
+
+	public static final Comparator<Consumable>	TOTALGAIN_VALUE_RATIO_ORDER	= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getTotalGain() / o1.getValue() - o2.getTotalGain() / o2.getValue();
+																				}
+																			};
+
+	public static final Comparator<Consumable>	TOTAL_GAIN_ORDER			= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getTotalGain() - o2.getTotalGain();
+																				}
+																			};
+
 	/** The Constant MANA_GAIN_ORDER. */
-	public static final Comparator<Consumable>	MANA_GAIN_ORDER	= new Comparator<Consumable>() {
-																	@Override
-																	public int compare(final Consumable o1, final Consumable o2) {
-																		return o1.getManaGain() - o2.getManaGain();
-																	}
-																};
+	public static final Comparator<Consumable>	MANA_GAIN_ORDER				= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getManaGain() - o2.getManaGain();
+																				}
+																			};
 
 	/**
 	 * Consume.
@@ -50,7 +78,7 @@ public abstract class Consumable extends Item {
 		Logger.log(c, "J'utilise " + this.getName() + " et gagne " + StringUtils.join(gains, " et ") + ".");
 		c.addLife(this.getLifeGain());
 		c.addMana(this.getManaGain());
-		c.inventoryRemoveItem(this, 1);
+		c.removeItem(this, 1);
 	}
 
 	/**
@@ -73,6 +101,10 @@ public abstract class Consumable extends Item {
 	@Override
 	public Type getType() {
 		return Type.CONSUMMABLE;
+	}
+
+	public int getTotalGain() {
+		return this.getLifeGain() + this.getManaGain();
 	}
 
 }

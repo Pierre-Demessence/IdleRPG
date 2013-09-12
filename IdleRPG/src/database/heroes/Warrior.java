@@ -10,7 +10,6 @@ import java.util.EnumMap;
 import character.Attribute;
 import character.Hero;
 import database.items.Type;
-import database.items.consumables.SmallLifePotion;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -26,7 +25,6 @@ public class Warrior extends Hero {
 	 */
 	public Warrior(final String name) {
 		super(name);
-		this.inventoryAddItem(new SmallLifePotion(), 10);
 	}
 
 	/* (non-Javadoc)

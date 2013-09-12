@@ -1,20 +1,15 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:41:12
+ * Last Update : 11 sept. 2013 - 23:55:13
  */
 package character;
 
 import item.Consumable;
-import item.Equipment;
 import item.Item;
 import item.Weapon;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeSet;
 
 import location.Dungeon;
@@ -33,91 +28,47 @@ import database.items.Type;
  */
 public abstract class Hero extends Character {
 
-	/**
-	 * The Enum DelayType.
-	 */
-	private enum DelayType {
-
-		/** The dungeon. */
-		DUNGEON(2500),
-
-		/** The exploration. */
-		EXPLORATION(5000),
-
-		/** The fighting. */
-		FIGHTING(1000),
-
-		/** The shop buying. */
-		SHOP_BUYING(1000),
-
-		/** The shop selling. */
-		SHOP_SELLING(1000);
-
-		/** The delay. */
-		private long	delay;
-
-		/**
-		 * Instantiates a new delay type.
-		 * 
-		 * @param ms
-		 *            the ms
-		 */
-		DelayType(final long ms) {
-			this.delay = ms;
-		}
-
-		/**
-		 * Gets the delay.
-		 * 
-		 * @return the delay
-		 */
-		public long getDelay() {
-			return this.delay;
-		}
-	}
-
 	/** The delay before new update. */
-	private DelayType					delayBeforeNewUpdate;
-
-	/** The equipment. */
-	private EnumMap<Slot, Equipment>	equipment;
+	private DelayType		delayBeforeNewUpdate;
 
 	/** The experience. */
-	private int							experience;
+	private int				experience;
 
 	/** The fight. */
-	private Fight						fight;
+	private Fight			fight;
 
 	/** The goal. */
-	private Goal						goal;
-
-	/** The gold. */
-	private int							gold;
+	private Goal			goal;
 
 	/** The inventory. */
-	private final Inventory				inventory;
+	private final Inventory	inventory;
 
 	/** The level. */
-	private final int					level;
+	private final int		level;
 
 	/** The location. */
-	private Location					location;
-
-	/** The marked to sell. */
-	private final HashSet<Item>			markedToSell;
+	private Location		location;
 
 	/** The time since last update. */
-	private long						timeSinceLastUpdate	= Integer.MIN_VALUE;
+	private long			timeSinceLastUpdate	= Integer.MIN_VALUE;
+
+	private int				fightBeforeGoToShop;
+
+	public void setFightBeforeGoToShop() {
+		this.fightBeforeGoToShop = 1;
+	}
+
+	public void decreaseFightBeforeGoToShop() {
+		if( this.fightBeforeGoToShop > 0 )
+			this.fightBeforeGoToShop--;
+	}
 
 	/* (non-Javadoc)
 	 * @see character.Character#getArmor()
 	 */
 	@Override
 	public int getArmor() {
-		int armor = 0;
-		for( Entry<Slot, Equipment> e : this.equipment.entrySet() )
-			armor += e.getValue().getArmorBonus();
-		return armor;
+		return this.inventory.getArmor();
 	}
 
 	/**
@@ -128,14 +79,11 @@ public abstract class Hero extends Character {
 	 */
 	public Hero(final String name) {
 		super(name);
-		this.gold = 100;
 		this.level = 1;
 		this.experience = 0;
 		this.location = Exploration.getInstance();
 		this.delayBeforeNewUpdate = DelayType.EXPLORATION;
-		this.inventory = new Inventory();
-		this.markedToSell = new HashSet<>();
-		this.equipment = new EnumMap<>(Slot.class);
+		this.inventory = new Inventory(this);
 	}
 
 	/**
@@ -149,26 +97,12 @@ public abstract class Hero extends Character {
 		this.experience = Math.max(0, this.experience);
 	}
 
-	/**
-	 * Adds the gold.
-	 * 
-	 * @param gain
-	 *            the gain
-	 */
-	public void addGold(final int gain) {
-		this.gold += gain;
-		this.gold = Math.max(0, this.gold);
-	}
-
 	/* (non-Javadoc)
 	 * @see character.Character#attack(character.Character)
 	 */
 	@Override
 	public void attack(final Character c) {
-		if( this.hasWeapon() )
-			super.attack(c, this.equipmentGetWeapon().getDammages(this));
-		else
-			super.attack(c, GlobalFormula.COMBAT_UNARMED.getFormula().calculate(this));
+		super.attack(c, this.getDammagesFormula().calculate(this));
 	}
 
 	/* (non-Javadoc)
@@ -223,7 +157,11 @@ public abstract class Hero extends Character {
 	 * @return the dammages formula
 	 */
 	public Formula getDammagesFormula() {
-		return ( this.hasWeapon() ? this.equipmentGetWeapon().getFormula() : GlobalFormula.COMBAT_UNARMED.getFormula() );
+		if( this.inventory.hasEquipment(Slot.MAINHAND) ) {
+			Weapon w = (Weapon) this.inventory.getEquipment(Slot.MAINHAND);
+			return w.getFormula();
+		} else
+			return GlobalFormula.COMBAT_UNARMED.getFormula();
 	}
 
 	/**
@@ -250,7 +188,7 @@ public abstract class Hero extends Character {
 	 * @return the gold
 	 */
 	public int getGold() {
-		return this.gold;
+		return this.inventory.getGold();
 	}
 
 	/* (non-Javadoc)
@@ -271,51 +209,6 @@ public abstract class Hero extends Character {
 	}
 
 	/**
-	 * Inventory add item.
-	 * 
-	 * @param item
-	 *            the i
-	 * @param n
-	 *            the quantity
-	 */
-	public void inventoryAddItem(final Item item, final int n) {
-		this.inventory.add(item, n);
-		if( !this.getAllowedItemTypes().contains(item.getType()) )
-			this.markedToSell.add(item);
-		else if( item instanceof Equipment )
-			this.testEquip((Equipment) item);
-	}
-
-	private void equip(Equipment equipment) {
-		Slot slot = equipment.getSlot();
-		if( this.equipment.containsKey(slot) ) {
-			Logger.log(this, "Je déséquipe " + this.equipment.get(slot).getName() + ".");
-			this.inventoryAddItem(this.equipment.get(slot), 1);
-		}
-		Logger.log(this, "Je m'équipe de " + equipment.getName() + ".");
-		this.equipment.put(slot, equipment);
-		this.inventoryRemoveItem(equipment, 1);
-	}
-
-	private void testEquip(Equipment equipement) {
-		Slot slot = equipement.getSlot();
-		if( !this.equipment.containsKey(slot) )
-			this.equip(equipement);
-	}
-
-	/**
-	 * Inventory remove item.
-	 * 
-	 * @param item
-	 *            the item
-	 * @param n
-	 *            the quantity
-	 */
-	public void inventoryRemoveItem(final Item item, final int n) {
-		this.inventory.remove(item, n);
-	}
-
-	/**
 	 * Sets the fight.
 	 * 
 	 * @param fight
@@ -325,24 +218,7 @@ public abstract class Hero extends Character {
 		this.fight = fight;
 	}
 
-	/**
-	 * Shop buy.
-	 */
-	public void shopBuy() {
-		// TODO
-	}
-
-	/**
-	 * Shop sell.
-	 */
-	public void shopSell() {
-		final Iterator<Item> it = this.markedToSell.iterator();
-		while( it.hasNext() ) {
-			final Item i = it.next();
-			Shop.getInstance().buy(this, i, this.inventory.getCount(i));
-			it.remove();
-		}
-	}
+	private int	KOCounter;
 
 	/**
 	 * Update.
@@ -353,7 +229,12 @@ public abstract class Hero extends Character {
 	public void update(final long time) {
 		this.timeSinceLastUpdate = time;
 		this.updateGoal();
-		if( this.isFighting() ) {
+		if( this.isKO() ) {
+			this.move(Exploration.getInstance());
+			this.KOCounter++;
+			this.addLife(this.getMaxLife());
+			this.delayBeforeNewUpdate = DelayType.RESURRECTION;
+		} else if( this.isFighting() ) {
 			this.delayBeforeNewUpdate = DelayType.FIGHTING;
 			this.fight.doTurn();
 		} else if( this.isInDungeon() ) {
@@ -400,41 +281,24 @@ public abstract class Hero extends Character {
 	 * Do shop.
 	 */
 	private void doShop() {
-		if( this.goal == Goal.SHOP ) {
-			if( !this.markedToSell.isEmpty() )
-				this.shopSell();
-
-			final Shop shop = (Shop) this.location;
-			Logger.log("Bonjour " + this.getName() + " !");
-			Logger.log(this, "Je dispose de " + this.getGold() + " po.");
-
-			final Set<Item> shopItems = shop.getItems();
-			if( shopItems.isEmpty() )
-				Logger.log("Nous sommes désolé mais le magasin est vide.");
-			else {
-				Logger.log("Le magasin dispose des objets suivants :");
-				for( final Item i : shopItems ) {
-					Logger.log("\t" + i.getName() + " au nombre de " + shop.getCount(i) + ".");
-					if( this.shopCanAfford(i, 1) ) {
-						shop.sell(this, i, 1);
-						Logger.log(this, "J'en achète 1.");
-					} else
-						Logger.log(this, "Je n'ai pas assez d'argent.");
-				}
-			}
-		} else {
+		if( this.goal == Goal.SHOP )
+			if( this.inventory.hasSomethingToSell() )
+				this.inventory.sell();
+			else
+				this.inventory.buy();
+		else {
 			Logger.log(this, "Je sors du magasin.");
 			this.move(Exploration.getInstance());
+			this.inventory.setShopChecked(false, false);
 		}
 	}
 
-	/**
-	 * Equipment get weapon.
-	 * 
-	 * @return the weapon
-	 */
-	private Weapon equipmentGetWeapon() {
-		return (Weapon) this.equipment.get(Slot.MAINHAND);
+	public void addGold(int gain) {
+		this.inventory.addGold(gain);
+	}
+
+	public void addItem(Item item, int n) {
+		this.inventory.addItem(item, n);
 	}
 
 	/**
@@ -444,7 +308,7 @@ public abstract class Hero extends Character {
 	 *            the urge
 	 */
 	private void fightUseLifeConsumable(final boolean urge) {
-		final TreeSet<Consumable> consumables = this.inventoryGetLifeConsumables();
+		final TreeSet<Consumable> consumables = this.inventory.getLifeConsumables();
 
 		Consumable toUse = null;
 		float toUseCoef = 0;
@@ -464,13 +328,31 @@ public abstract class Hero extends Character {
 	}
 
 	/**
+	 * The percent of life the hero should have in total life gain over all his consummables.
+	 * 
+	 * @return the min life gain to keep
+	 */
+	public float getMinLifeGainToKeep() {
+		return 2;
+	}
+
+	/**
+	 * The percent of life the hero should have in total life gain over all his consummables.
+	 * 
+	 * @return the min life gain to keep
+	 */
+	public float getMaxLifeGainToKeep() {
+		return 3;
+	}
+
+	/**
 	 * Fight use mana consumable.
 	 * 
 	 * @param urge
 	 *            the urge
 	 */
 	private void fightUseManaConsumable(final boolean urge) {
-		final TreeSet<Consumable> consumables = this.inventoryGetManaConsumables();
+		final TreeSet<Consumable> consumables = this.inventory.getManaConsumables();
 
 		Consumable toUse = null;
 		float toUseCoef = 0;
@@ -487,54 +369,6 @@ public abstract class Hero extends Character {
 		}
 
 		toUse.consume(this);
-	}
-
-	/**
-	 * Checks for weapon.
-	 * 
-	 * @return true, if successful
-	 */
-	private boolean hasWeapon() {
-		return ( this.equipmentGetWeapon() != null );
-	}
-
-	/**
-	 * Inventory get consumables.
-	 * 
-	 * @return the hash set
-	 */
-	private HashSet<Consumable> inventoryGetConsumables() {
-		final HashSet<Consumable> consos = new HashSet<>();
-		for( final Item i : this.inventory )
-			if( i instanceof Consumable )
-				consos.add((Consumable) i);
-		return consos;
-	}
-
-	/**
-	 * Inventory get life consumables.
-	 * 
-	 * @return the tree set
-	 */
-	private TreeSet<Consumable> inventoryGetLifeConsumables() {
-		final TreeSet<Consumable> consos = new TreeSet<>(Consumable.LIGE_GAIN_ORDER);
-		for( final Consumable c : this.inventoryGetConsumables() )
-			if( c.getLifeGain() > 0 )
-				consos.add(c);
-		return consos;
-	}
-
-	/**
-	 * Inventory get mana consumables.
-	 * 
-	 * @return the tree set
-	 */
-	private TreeSet<Consumable> inventoryGetManaConsumables() {
-		final TreeSet<Consumable> consos = new TreeSet<>(Consumable.MANA_GAIN_ORDER);
-		for( final Consumable c : this.inventoryGetConsumables() )
-			if( c.getManaGain() > 0 )
-				consos.add(c);
-		return consos;
 	}
 
 	/**
@@ -580,21 +414,8 @@ public abstract class Hero extends Character {
 	 *            the location
 	 */
 	private void move(final Location location) {
-		// TODO Faire des vérifications afin que l'on ne puisse pas sauter d'étapes.
+		// TODO Faire des vérifications afin que l'on ne puisse pas sauter d'étapes. Sauf en cas de mort !
 		this.location = location;
-	}
-
-	/**
-	 * Shop can afford.
-	 * 
-	 * @param i
-	 *            the i
-	 * @param j
-	 *            the j
-	 * @return true, if successful
-	 */
-	private boolean shopCanAfford(final Item i, final int j) {
-		return this.gold >= i.getValue();
 	}
 
 	/**
@@ -617,7 +438,10 @@ public abstract class Hero extends Character {
 	 * @return true, if successful
 	 */
 	private boolean shouldUseLifeConsumable() {
-		return ( this.inventoryGetLifeConsumables().size() > 0 ) && ( ( (float) this.getLife() / this.getMaxLife() ) < 0.5 );
+		if( this.inventory.getLifeConsumables().size() == 0 )
+			return false;
+
+		return ( (float) this.getLife() / this.getMaxLife() ) < 0.5;
 	}
 
 	/**
@@ -636,9 +460,17 @@ public abstract class Hero extends Character {
 	private void updateGoal() {
 		if( this.isFighting() && this.shouldFlee() )
 			this.goal = Goal.FLEE;
-		else if( !this.isFighting() && ( this.inventoryGetLifeConsumables().size() == 0 ) )
+		else if( !this.isFighting() && this.fightBeforeGoToShop == 0 && ( this.inventory.isFull() || this.inventory.getTotalLifeGain() < this.getMaxLife() * this.getMinLifeGainToKeep() ) )
 			this.goal = Goal.SHOP;
+		else if( this.isShopping() && ( this.inventory.hasSomethingToSell() || !this.inventory.isShopChecked() ) )
+			this.goal = Goal.SHOP;
+		else if( this.isShopping() && this.inventory.isShopChecked() )
+			this.goal = Goal.DUNGEON;
 		else
 			this.goal = Goal.DUNGEON;
+	}
+
+	public void removeItem(Item item, int n) {
+		this.inventory.removeItem(item, n);
 	}
 }
