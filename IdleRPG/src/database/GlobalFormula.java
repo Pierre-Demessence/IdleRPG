@@ -6,22 +6,21 @@ package database;
 
 import util.Formula;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum GlobalFormula.
  */
 public enum GlobalFormula {
 
-	/** The combat sword. */
+	/** The combat with sword formula. */
 	COMBAT_SWORD("2 * STR + 2 * DEX + CON"),
 
-	/** The combat unarmed. */
+	/** The combat unarmed formula. */
 	COMBAT_UNARMED("2 * STR + CON"),
 
-	/** The life max. */
+	/** The life max formula. */
 	LIFE_MAX("3 * CON + 2 * STR"),
 
-	/** The mana max. */
+	/** The mana max formula. */
 	MANA_MAX("3 * WIS + 2 * INT");
 
 	/** The formula. */

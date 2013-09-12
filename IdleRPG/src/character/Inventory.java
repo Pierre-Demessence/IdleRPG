@@ -79,13 +79,13 @@ public class Inventory {
 		if( !this.inventory.contains(item) && this.isFull() ) {
 			Logger.log(this.hero, "Je n'ai plus de place dans mon inventaire.");
 
-			TreeSet<Item> markedForSale = new TreeSet<>(Item.VALUE_ORDER);
+			final TreeSet<Item> markedForSale = new TreeSet<>(Item.VALUE_ORDER);
 			markedForSale.addAll(this.markedForSale);
 
-			Item firstItemForSale = markedForSale.first();
-			int countFirstItemForSale = this.inventory.getCount(firstItemForSale);
+			final Item firstItemForSale = markedForSale.first();
+			final int countFirstItemForSale = this.inventory.getCount(firstItemForSale);
 
-			if( firstItemForSale.getValue() * countFirstItemForSale <= item.getValue() * n ) {
+			if( ( firstItemForSale.getValue() * countFirstItemForSale ) <= ( item.getValue() * n ) ) {
 				Logger.log(this.hero, "Je jette mes " + countFirstItemForSale + " " + firstItemForSale.getName() + " pour faire de la place.");
 				this.removeItem(firstItemForSale, countFirstItemForSale);
 			} else {
@@ -107,8 +107,7 @@ public class Inventory {
 
 		this.inventory.add(item, n);
 		// If the item is useless, mark it for sale.
-		if( !this.hero.getAllowedItemTypes()
-						.contains(item.getType()) )
+		if( !this.hero.getAllowedItemTypes().contains(item.getType()) )
 			this.markedForSale.add(item);
 		// If the item can and should be equiped, equip it.
 		else if( this.testEquip(item) ) {
@@ -141,10 +140,10 @@ public class Inventory {
 			Logger.log(this.hero, "J'ai besoin de plus de consommables, mais je n'ai pas assez d'argent.");
 		} else {
 
-			final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Equipment.VALUE_ORDER));
+			final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
 			equipments.addAll(shop.getEquipments(null, this.hero.getLevel()));
-			for( Equipment e : equipments )
-				if( e.getValue() <= this.getGold() && this.testEquip(e) ) {
+			for( final Equipment e : equipments )
+				if( ( e.getValue() <= this.getGold() ) && this.testEquip(e) ) {
 					shop.sell(this.hero, e, 1);
 					return;
 				}
@@ -152,10 +151,6 @@ public class Inventory {
 			this.setShopChecked(true, false);
 			Logger.log(this.hero, "Je n'ai rien d'autre à acheter.");
 		}
-	}
-
-	public EnumMap<Slot, Equipment> getEquipment() {
-		return this.equipment;
 	}
 
 	/**
@@ -166,9 +161,17 @@ public class Inventory {
 	public int getArmor() {
 		int armor = 0;
 		for( final Entry<Slot, Equipment> e : this.equipment.entrySet() )
-			armor += e.getValue()
-						.getArmorBonus();
+			armor += e.getValue().getArmorBonus();
 		return armor;
+	}
+
+	/**
+	 * Gets the equipment.
+	 * 
+	 * @return the equipment
+	 */
+	public EnumMap<Slot, Equipment> getEquipment() {
+		return this.equipment;
 	}
 
 	/**
@@ -255,8 +258,7 @@ public class Inventory {
 	 * @return true, if the inventory is full
 	 */
 	public boolean isFull() {
-		return this.inventory.uniqueSet()
-								.size() == 10;
+		return this.inventory.uniqueSet().size() == 10;
 	}
 
 	/**
@@ -286,8 +288,7 @@ public class Inventory {
 	public void sell() {
 		final Iterator<Item> it = this.markedForSale.iterator();
 		final Item i = it.next();
-		Shop.getInstance()
-			.buy(this.hero, i, this.inventory.getCount(i));
+		Shop.getInstance().buy(this.hero, i, this.inventory.getCount(i));
 		it.remove();
 	}
 
@@ -314,8 +315,7 @@ public class Inventory {
 	private void equip(final Equipment equipment) {
 		final Slot slot = equipment.getSlot();
 		if( this.equipment.containsKey(slot) ) {
-			Logger.log(this.hero, "Je déséquipe " + this.equipment.get(slot)
-																	.getName() + ".");
+			Logger.log(this.hero, "Je déséquipe " + this.equipment.get(slot).getName() + ".");
 			this.addItem(this.equipment.get(slot), 1);
 		}
 		Logger.log(this.hero, "Je m'équipe de " + equipment.getName() + ".");
@@ -350,8 +350,7 @@ public class Inventory {
 		final Equipment equipment = (Equipment) item;
 
 		// If the class cannot equip this type of item, return false.
-		if( !this.hero.getAllowedItemTypes()
-						.contains(equipment.getType()) )
+		if( !this.hero.getAllowedItemTypes().contains(equipment.getType()) )
 			return false;
 
 		// Check the level of the item.
@@ -366,7 +365,8 @@ public class Inventory {
 		if( !this.equipment.containsKey(slot) )
 			return true;
 
-		// TODO Check if the item is better than the already equiped item.
+		// Beyond that, there is already an item in the corresponding slot.
+		// Check if the item is better than the already equiped item.
 		if( Item.VALUE_ORDER.compare(item, this.equipment.get(slot)) > 0 )
 			return true;
 

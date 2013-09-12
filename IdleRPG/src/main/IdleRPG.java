@@ -64,13 +64,14 @@ public class IdleRPG extends TWLStateBasedGame {
 	/** The hero list. */
 	private final ArrayList<Hero>	heroList;
 
+	/** The name generator. */
+	private final NameGenerator		nameGenerator;
+
 	/** The paused. */
 	private boolean					paused;
 
 	/** The shop. */
 	private final Shop				shop;
-
-	private final NameGenerator		nameGenerator;
 
 	/**
 	 * Instantiates a new idle rpg.
@@ -84,11 +85,6 @@ public class IdleRPG extends TWLStateBasedGame {
 		this.nameGenerator = new NameGenerator(this);
 
 		this.addHero();
-	}
-
-	private void addHero() {
-		final Hero h1 = new Warrior(this.nameGenerator.generate());
-		this.heroList.add(h1);
 	}
 
 	/**
@@ -171,6 +167,14 @@ public class IdleRPG extends TWLStateBasedGame {
 	 */
 	public void togglePaused() {
 		this.paused = !this.paused;
+	}
+
+	/**
+	 * Adds the hero.
+	 */
+	private void addHero() {
+		final Hero h1 = new Warrior(this.nameGenerator.generate());
+		this.heroList.add(h1);
 	}
 
 	/* (non-Javadoc)

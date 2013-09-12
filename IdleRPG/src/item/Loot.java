@@ -6,7 +6,6 @@ package item;
 
 import java.util.Random;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Loot.
  */
@@ -25,11 +24,11 @@ public class Loot {
 	 * Instantiates a new loot.
 	 * 
 	 * @param item
-	 *            the item
+	 *            the item to loot
 	 * @param chance
-	 *            the chance
+	 *            the chance to get the item. Between 0.0f and 1.0f
 	 * @param quantity
-	 *            the quantity
+	 *            the quantity to loot
 	 */
 	public Loot(final Item item, final float chance, final int quantity) {
 		this.item = item;
@@ -58,7 +57,7 @@ public class Loot {
 	/**
 	 * Test.
 	 * 
-	 * @return true, if successful
+	 * @return true, if the looting is successful
 	 */
 	public boolean test() {
 		final Random r = new Random();

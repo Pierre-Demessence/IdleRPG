@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:19
+ * Last Update : 12 sept. 2013 - 23:21:15
  */
 package database.monsters;
 
@@ -13,7 +13,6 @@ import character.Attribute;
 import character.Monster;
 import database.items.useless.Leather;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Gobelin.
  */

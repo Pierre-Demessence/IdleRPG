@@ -30,7 +30,7 @@ public abstract class Weapon extends Equipment {
 	 * @return the dammages
 	 */
 	public int getDammages(final Character c) {
-		return this.getFormula().calculate(c);
+		return this.getFormula().calculate(c) + this.getDammagesBonus();
 	}
 
 	/**
@@ -48,9 +48,21 @@ public abstract class Weapon extends Equipment {
 		return Slot.MAINHAND;
 	}
 
+	/* (non-Javadoc)
+	 * @see item.Equipment#getValue()
+	 */
 	@Override
 	public int getValue() {
-		return super.getValue() + 100;
+		return super.getValue() + 100 + 50 * this.getDammagesBonus();
+	}
+
+	/**
+	 * Gets the dammages bonus.
+	 * 
+	 * @return the dammages bonus
+	 */
+	public int getDammagesBonus() {
+		return 0;
 	}
 
 }

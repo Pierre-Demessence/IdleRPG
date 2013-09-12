@@ -12,7 +12,6 @@ import java.util.EnumMap;
 import character.Attribute;
 import character.Monster;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Orc.
  */

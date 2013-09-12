@@ -25,6 +25,7 @@ import database.items.Slot;
 import database.items.Type;
 
 // TODO: Auto-generated Javadoc
+// TODO: Implémenter un system de leveling.
 /**
  * The Class Hero.
  */
@@ -132,9 +133,9 @@ public abstract class Hero extends Character {
 	public void doFight(final Character opponent) {
 		if( this.goal == Goal.DUNGEON ) {
 			if( this.shouldUseLifeConsumable() )
-				this.fightUseLifeConsumable(false);
+				this.fightUseLifeConsumable();
 			else if( this.shouldUseManaConsumable() )
-				this.fightUseManaConsumable(false);
+				this.fightUseManaConsumable();
 			else
 				this.attack(opponent);
 		} else if( this.goal == Goal.FLEE ) {
@@ -162,6 +163,18 @@ public abstract class Hero extends Character {
 		return this.inventory.getArmor();
 	}
 
+	/* (non-Javadoc)
+	 * @see character.Character#getAttribute(character.Attribute)
+	 */
+	@Override
+	public int getAttribute(final Attribute attribute) {
+		int value = super.getAttribute(attribute);
+		for( final Entry<Slot, Equipment> e : this.inventory.getEquipment().entrySet() )
+			if( e.getValue().getAttributesBonus().containsKey(attribute) )
+				value += e.getValue().getAttributesBonus().get(attribute);
+		return value;
+	}
+
 	/**
 	 * The total of all attributes points must be 10.
 	 * 
@@ -170,15 +183,6 @@ public abstract class Hero extends Character {
 	 */
 	@Override
 	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
-
-	@Override
-	public int getAttribute(Attribute attribute) {
-		int value = super.getAttribute(attribute);
-		for( Entry<Slot, Equipment> e : this.inventory.getEquipment().entrySet() )
-			if( e.getValue().getAttributesBonus().containsKey(attribute) )
-				value += e.getValue().getAttributesBonus().get(attribute);
-		return value;
-	}
 
 	/**
 	 * Gets the class name.
@@ -327,6 +331,8 @@ public abstract class Hero extends Character {
 	 * Do dungeon.
 	 */
 	private void doDungeon() {
+		if( this.shouldUseLifeConsumable() )
+			this.fightUseLifeConsumable();
 		if( this.goal == Goal.DUNGEON ) {
 			Logger.log(this, "Je recherche un nouvel ennemi à combattre !");
 			final Dungeon dungeon = (Dungeon) this.location;
@@ -370,17 +376,14 @@ public abstract class Hero extends Character {
 	/**
 	 * Fight use life consumable.
 	 * 
-	 * @param urge
-	 *            the urge
 	 */
-	private void fightUseLifeConsumable(final boolean urge) {
+	private void fightUseLifeConsumable() {
 		final TreeSet<Consumable> consumables = this.inventory.getLifeConsumables();
 
 		Consumable toUse = null;
 		float toUseCoef = 0;
 		final int toGain = this.getMaxLife() - this.getLife();
 
-		// TODO use the urge boolean.
 		for( final Consumable c : consumables ) {
 			final float coef = Math.min((float) c.getLifeGain() / toGain, 1.0f) - Math.max( ( (float) c.getLifeGain() - toGain ) / c.getLifeGain(), 0.0f);
 			if( coef > toUseCoef ) {
@@ -396,17 +399,14 @@ public abstract class Hero extends Character {
 	/**
 	 * Fight use mana consumable.
 	 * 
-	 * @param urge
-	 *            the urge
 	 */
-	private void fightUseManaConsumable(final boolean urge) {
+	private void fightUseManaConsumable() {
 		final TreeSet<Consumable> consumables = this.inventory.getManaConsumables();
 
 		Consumable toUse = null;
 		float toUseCoef = 0;
 		final int toGain = this.getMaxMana() - this.getMana();
 
-		// TODO use the urge boolean.
 		for( final Consumable c : consumables ) {
 			final float coef = Math.min((float) c.getManaGain() / toGain, 1.0f) - Math.max( ( (float) c.getManaGain() - toGain ) / c.getManaGain(), 0.0f);
 			if( coef > toUseCoef ) {
@@ -462,7 +462,7 @@ public abstract class Hero extends Character {
 	 *            the location
 	 */
 	private void move(final Location location) {
-		// TODO Faire des vérifications afin que l'on ne puisse pas sauter d'étapes. Sauf en cas de mort !
+		// TODO Faire des vérifications afin que l'on ne puisse pas sauter d'étapes. Sauf en cas de résurrection.
 		this.location = location;
 	}
 
@@ -493,16 +493,18 @@ public abstract class Hero extends Character {
 		if( this.inventory.getLifeConsumables().size() == 0 )
 			return false;
 
-		if( this.isFighting() )
+		if( this.isFighting() ) {
+			final Monster monster = this.fight.getMonster();
 			// Si on est pas sûr de tuer l'ennemi mais que s'il survit il est sûr de nous tuer, on prend une potion.
-			if( this.chanceToKill(this.fight.getMonster()) < 0.9f && this.fight.getMonster().chanceToKill(this) == 1 )
+			if( ( this.chanceToKill(monster) < 0.9f ) && ( monster.chanceToKill(this) == 1 ) )
 				return true;
 			// Si on est plutôt sûr de tuer l'ennemi, on ne prend pas de potion.
-			else if( this.chanceToKill(this.fight.getMonster()) >= 0.8f )
+			else if( this.chanceToKill(monster) >= 0.8f )
 				return false;
-			// Si on a on moins qu'un certain % de notre vie, on prend une potion.
-			else if( (float) this.getLife() / this.getMaxLife() < 0.5f )
-				return true;
+		}
+		// Si on a on moins qu'un certain % de notre vie, on prend une potion.
+		if( ( (float) this.getLife() / this.getMaxLife() ) < 0.5f )
+			return true;
 
 		return false;
 	}
@@ -513,7 +515,7 @@ public abstract class Hero extends Character {
 	 * @return true, if successful
 	 */
 	private boolean shouldUseManaConsumable() {
-		// TODO Auto-generated method stub
+		// TODO shouldUseManaConsumable() - Des conditions plus simple que pour la vie.
 		return false;
 	}
 

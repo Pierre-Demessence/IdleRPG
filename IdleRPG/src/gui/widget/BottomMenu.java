@@ -9,7 +9,6 @@ import main.IdleRPG;
 import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class BottomMenu.
  */
@@ -35,12 +34,12 @@ public class BottomMenu extends BoxLayout {
 	}
 
 	/**
-	 * Creates the button.
+	 * Creates a button.
 	 * 
 	 * @param text
-	 *            the text
+	 *            the button text
 	 * @param cb
-	 *            the cb
+	 *            the button callback
 	 * @return the button
 	 */
 	private Button createButton(final String text, final Runnable cb) {

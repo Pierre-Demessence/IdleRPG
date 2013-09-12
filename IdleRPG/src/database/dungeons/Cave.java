@@ -7,7 +7,6 @@ package database.dungeons;
 import location.Dungeon;
 import database.monsters.Gobelin;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Cave.
  */

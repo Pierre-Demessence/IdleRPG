@@ -4,18 +4,17 @@
  */
 package character;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum Goal.
  */
 public enum Goal {
 
-	/** The dungeon. */
+	/** Should go to dungeons to fight monsters. */
 	DUNGEON,
 
-	/** The flee. */
+	/** Should flee the actual fight. */
 	FLEE,
 
-	/** The shop. */
+	/** Should go to the shop. */
 	SHOP;
 }

@@ -12,7 +12,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.matthiasmann.twl.ActionMap;
 import de.matthiasmann.twl.Widget;
 
-// TODO: Auto-generated Javadoc
 /**
  * The base class for all game states when using TWLStateBasedGame.
  * 

@@ -4,7 +4,6 @@
  */
 package database.items;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum Slot.
  */

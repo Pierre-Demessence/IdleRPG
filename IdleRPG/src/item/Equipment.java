@@ -11,6 +11,7 @@ import character.Attribute;
 import database.items.Slot;
 
 // TODO: Auto-generated Javadoc
+// TODO: Implémenter un système de bonus d'objet. (De force, de feu, de vitalité, etc...).
 /**
  * The Class Equipment.
  */
@@ -29,7 +30,7 @@ public abstract class Equipment extends Item {
 	 * @return the attributes bonus
 	 */
 	public EnumMap<Attribute, Integer> getAttributesBonus() {
-		EnumMap<Attribute, Integer> attributesBonus = new EnumMap<>(Attribute.class);
+		final EnumMap<Attribute, Integer> attributesBonus = new EnumMap<>(Attribute.class);
 		return attributesBonus;
 	}
 
@@ -50,10 +51,13 @@ public abstract class Equipment extends Item {
 	 */
 	public abstract Slot getSlot();
 
+	/* (non-Javadoc)
+	 * @see item.Item#getValue()
+	 */
 	@Override
 	public int getValue() {
 		int value = this.getArmorBonus() * 50;
-		for( Entry<Attribute, Integer> e : this.getAttributesBonus().entrySet() )
+		for( final Entry<Attribute, Integer> e : this.getAttributesBonus().entrySet() )
 			value += e.getValue() * 50;
 		return value;
 	}

@@ -6,7 +6,6 @@ package database.items.consumables;
 
 import item.Consumable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SmallLifePotion.
  */

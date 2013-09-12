@@ -7,7 +7,6 @@ package database.items.useless;
 import item.Item;
 import database.items.Type;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Leather.
  */

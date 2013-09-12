@@ -4,7 +4,6 @@
  */
 package character;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum Attribute.
  */

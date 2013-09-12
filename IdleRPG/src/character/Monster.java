@@ -18,6 +18,9 @@ import database.GlobalFormula;
  */
 public abstract class Monster extends Character implements Cloneable {
 
+	/**
+	 * Instantiates a new monster.
+	 */
 	public Monster() {
 		this.init();
 	}
@@ -27,8 +30,7 @@ public abstract class Monster extends Character implements Cloneable {
 	 */
 	@Override
 	public void attack(final Character c) {
-		super.attack(c, this.getDammagesFormula()
-							.calculate(this));
+		super.attack(c, this.getDammagesFormula().calculate(this));
 	}
 
 	/* (non-Javadoc)
@@ -78,13 +80,6 @@ public abstract class Monster extends Character implements Cloneable {
 	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
 
 	/**
-	 * Gets the experience loot.
-	 * 
-	 * @return the experience loot
-	 */
-	public abstract int getExperienceLoot();
-
-	/**
 	 * Gets the formula.
 	 * 
 	 * @return the formula
@@ -93,6 +88,13 @@ public abstract class Monster extends Character implements Cloneable {
 	public Formula getDammagesFormula() {
 		return GlobalFormula.COMBAT_UNARMED.getFormula();
 	}
+
+	/**
+	 * Gets the experience loot.
+	 * 
+	 * @return the experience loot
+	 */
+	public abstract int getExperienceLoot();
 
 	/**
 	 * Gets the gold loot.

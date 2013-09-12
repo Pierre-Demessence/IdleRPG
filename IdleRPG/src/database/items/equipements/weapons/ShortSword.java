@@ -9,7 +9,6 @@ import util.Formula;
 import database.GlobalFormula;
 import database.items.Type;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShortSword.
  */

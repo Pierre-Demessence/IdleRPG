@@ -116,9 +116,12 @@ public abstract class Consumable extends Item {
 		return Type.CONSUMMABLE;
 	}
 
+	/* (non-Javadoc)
+	 * @see item.Item#getValue()
+	 */
 	@Override
 	public int getValue() {
-		return (int) ( this.getLifeGain() + this.getManaGain() * 1.5 );
+		return (int) ( this.getLifeGain() + ( this.getManaGain() * 1.5 ) );
 	}
 
 }
