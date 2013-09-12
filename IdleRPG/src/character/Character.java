@@ -6,6 +6,7 @@ package character;
 
 import java.util.EnumMap;
 
+import util.Formula;
 import util.Logger;
 import database.GlobalFormula;
 
@@ -29,6 +30,24 @@ public abstract class Character {
 	 */
 	public Character() {
 
+	}
+
+	public float chanceToKill(Character c) {
+		Formula dammagesFormula = this.getDammagesFormula();
+		int dammagesMin = dammagesFormula.calculateMin(this);
+		int dammagesMax = dammagesFormula.calculateMax(this);
+		int life = c.getLife();
+		if( dammagesMin >= life )
+			return 1.0f;
+		else if( dammagesMax < life )
+			return 0.0f;
+		else {
+			int kill = 0;
+			for( int i = dammagesMin ; i <= dammagesMax ; i++ )
+				if( i >= life )
+					kill++;
+			return (float) ( ( dammagesMax - dammagesMin ) + 1 ) / kill;
+		}
 	}
 
 	/**
@@ -92,6 +111,8 @@ public abstract class Character {
 		Logger.log(this, "J'attaque " + c.getName() + " et fait " + dammages + " dégâts.");
 		c.defend(dammages);
 	}
+
+	public abstract Formula getDammagesFormula();
 
 	/**
 	 * Defend.

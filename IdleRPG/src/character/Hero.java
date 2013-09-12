@@ -194,6 +194,7 @@ public abstract class Hero extends Character {
 	 * 
 	 * @return the dammages formula
 	 */
+	@Override
 	public Formula getDammagesFormula() {
 		if( this.inventory.hasEquipment(Slot.MAINHAND) ) {
 			final Weapon w = (Weapon) this.inventory.getEquipment(Slot.MAINHAND);
@@ -485,10 +486,25 @@ public abstract class Hero extends Character {
 	 * @return true, if successful
 	 */
 	private boolean shouldUseLifeConsumable() {
+		// On a toute notre vie, on ne prend pas de conso.
+		if( this.getLife() == this.getMaxLife() )
+			return false;
+		// On a pas de consommable, on ne prend pas de conso.
 		if( this.inventory.getLifeConsumables().size() == 0 )
 			return false;
 
-		return ( (float) this.getLife() / this.getMaxLife() ) < 0.5;
+		if( this.isFighting() )
+			// Si on est pas sûr de tuer l'ennemi mais que s'il survit il est sûr de nous tuer, on prend une potion.
+			if( this.chanceToKill(this.fight.getMonster()) < 0.9f && this.fight.getMonster().chanceToKill(this) == 1 )
+				return true;
+			// Si on est plutôt sûr de tuer l'ennemi, on ne prend pas de potion.
+			else if( this.chanceToKill(this.fight.getMonster()) >= 0.8f )
+				return false;
+			// Si on a on moins qu'un certain % de notre vie, on prend une potion.
+			else if( (float) this.getLife() / this.getMaxLife() < 0.5f )
+				return true;
+
+		return false;
 	}
 
 	/**

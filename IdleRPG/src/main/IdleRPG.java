@@ -70,6 +70,8 @@ public class IdleRPG extends TWLStateBasedGame {
 	/** The shop. */
 	private final Shop				shop;
 
+	private final NameGenerator		nameGenerator;
+
 	/**
 	 * Instantiates a new idle rpg.
 	 */
@@ -79,10 +81,13 @@ public class IdleRPG extends TWLStateBasedGame {
 
 		this.heroList = new ArrayList<>();
 		this.shop = Shop.getInstance();
+		this.nameGenerator = new NameGenerator(this);
 
-		final NameGenerator ng = new NameGenerator(this);
+		this.addHero();
+	}
 
-		final Hero h1 = new Warrior(ng.generate());
+	private void addHero() {
+		final Hero h1 = new Warrior(this.nameGenerator.generate());
 		this.heroList.add(h1);
 	}
 

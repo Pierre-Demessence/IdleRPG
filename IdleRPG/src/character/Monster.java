@@ -27,7 +27,8 @@ public abstract class Monster extends Character implements Cloneable {
 	 */
 	@Override
 	public void attack(final Character c) {
-		super.attack(c, this.getFormula().calculate(this));
+		super.attack(c, this.getDammagesFormula()
+							.calculate(this));
 	}
 
 	/* (non-Javadoc)
@@ -88,7 +89,8 @@ public abstract class Monster extends Character implements Cloneable {
 	 * 
 	 * @return the formula
 	 */
-	public Formula getFormula() {
+	@Override
+	public Formula getDammagesFormula() {
 		return GlobalFormula.COMBAT_UNARMED.getFormula();
 	}
 
