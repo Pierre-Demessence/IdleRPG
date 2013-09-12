@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package TWLSlick;
 
@@ -20,7 +20,7 @@ class TWLInputForwarder extends InputAdapter {
 
 	/** The gui. */
 	private final GUI	gui;
-	
+
 	/** The input. */
 	private final Input	input;
 

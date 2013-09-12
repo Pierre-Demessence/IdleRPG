@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:23
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package item;
 
@@ -14,11 +14,6 @@ import database.items.Type;
  */
 public abstract class Item implements Comparable<Item> {
 
-	@Override
-	public int compareTo(Item o) {
-		return this.getName().compareTo(o.getName());
-	}
-
 	/** The Constant VALUE_ORDER. */
 	public static final Comparator<Item>	VALUE_ORDER	= new Comparator<Item>() {
 															@Override
@@ -26,6 +21,14 @@ public abstract class Item implements Comparable<Item> {
 																return o1.getValue() - o2.getValue();
 															}
 														};
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(final Item o) {
+		return this.getName().compareTo(o.getName());
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)

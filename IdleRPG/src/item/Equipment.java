@@ -1,10 +1,11 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package item;
 
 import java.util.EnumMap;
+import java.util.Map.Entry;
 
 import character.Attribute;
 import database.items.Slot;
@@ -14,13 +15,6 @@ import database.items.Slot;
  * The Class Equipment.
  */
 public abstract class Equipment extends Item {
-
-	/**
-	 * Gets the slot.
-	 * 
-	 * @return the slot
-	 */
-	public abstract Slot getSlot();
 
 	/**
 	 * Gets the armor bonus.
@@ -34,13 +28,34 @@ public abstract class Equipment extends Item {
 	 * 
 	 * @return the attributes bonus
 	 */
-	public abstract EnumMap<Attribute, Integer> getAttributesBonus();
+	public EnumMap<Attribute, Integer> getAttributesBonus() {
+		EnumMap<Attribute, Integer> attributesBonus = new EnumMap<>(Attribute.class);
+		return attributesBonus;
+	}
 
 	/**
 	 * The required level to equip this object.
 	 * 
-	 * @return
+	 * @return the level
 	 */
-	public abstract int getLevel();
+	public int getLevel() {
+		// TODO En fonction de la valeur.
+		return 1;
+	}
+
+	/**
+	 * Gets the slot.
+	 * 
+	 * @return the slot
+	 */
+	public abstract Slot getSlot();
+
+	@Override
+	public int getValue() {
+		int value = this.getArmorBonus() * 50;
+		for( Entry<Attribute, Integer> e : this.getAttributesBonus().entrySet() )
+			value += e.getValue() * 50;
+		return value;
+	}
 
 }

@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:22
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package gui;
 
@@ -12,7 +12,7 @@ public enum ScreenState {
 
 	/** The heroes list. */
 	HEROES_LIST(0),
-	
+
 	/** The shop status. */
 	SHOP_STATUS(1);
 

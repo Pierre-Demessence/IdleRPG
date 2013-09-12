@@ -1,11 +1,11 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package database.items.useless;
 
-import database.items.Type;
 import item.Item;
+import database.items.Type;
 
 // TODO: Auto-generated Javadoc
 /**

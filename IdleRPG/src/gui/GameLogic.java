@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:18
  */
 package gui;
 
@@ -24,7 +24,7 @@ public abstract class GameLogic extends BasicTWLGameState {
 
 	/** The bottom menu. */
 	private BottomMenu	bottomMenu;
-	
+
 	/** The game. */
 	protected IdleRPG	game;
 

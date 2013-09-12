@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package TWLSlick;
 
@@ -35,7 +35,7 @@ public abstract class TWLStateBasedGame extends StateBasedGame {
 
 	/** The gui. */
 	private GUI				gui;
-	
+
 	/** The gui initialized. */
 	private boolean			guiInitialized;
 

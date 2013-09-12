@@ -1,15 +1,17 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 23:55:13
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package character;
 
 import item.Consumable;
+import item.Equipment;
 import item.Item;
 import item.Weapon;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import location.Dungeon;
@@ -37,11 +39,17 @@ public abstract class Hero extends Character {
 	/** The fight. */
 	private Fight			fight;
 
+	/** The fight before go to shop. */
+	private int				fightBeforeGoToShop;
+
 	/** The goal. */
 	private Goal			goal;
 
 	/** The inventory. */
 	private final Inventory	inventory;
+
+	/** The KO counter. */
+	private int				KOCounter;
 
 	/** The level. */
 	private final int		level;
@@ -51,25 +59,6 @@ public abstract class Hero extends Character {
 
 	/** The time since last update. */
 	private long			timeSinceLastUpdate	= Integer.MIN_VALUE;
-
-	private int				fightBeforeGoToShop;
-
-	public void setFightBeforeGoToShop() {
-		this.fightBeforeGoToShop = 1;
-	}
-
-	public void decreaseFightBeforeGoToShop() {
-		if( this.fightBeforeGoToShop > 0 )
-			this.fightBeforeGoToShop--;
-	}
-
-	/* (non-Javadoc)
-	 * @see character.Character#getArmor()
-	 */
-	@Override
-	public int getArmor() {
-		return this.inventory.getArmor();
-	}
 
 	/**
 	 * Instantiates a new hero.
@@ -84,6 +73,7 @@ public abstract class Hero extends Character {
 		this.location = Exploration.getInstance();
 		this.delayBeforeNewUpdate = DelayType.EXPLORATION;
 		this.inventory = new Inventory(this);
+		this.init();
 	}
 
 	/**
@@ -97,12 +87,42 @@ public abstract class Hero extends Character {
 		this.experience = Math.max(0, this.experience);
 	}
 
+	/**
+	 * Adds the gold.
+	 * 
+	 * @param gain
+	 *            the gain
+	 */
+	public void addGold(final int gain) {
+		this.inventory.addGold(gain);
+	}
+
+	/**
+	 * Adds the item.
+	 * 
+	 * @param item
+	 *            the item
+	 * @param n
+	 *            the n
+	 */
+	public void addItem(final Item item, final int n) {
+		this.inventory.addItem(item, n);
+	}
+
 	/* (non-Javadoc)
 	 * @see character.Character#attack(character.Character)
 	 */
 	@Override
 	public void attack(final Character c) {
 		super.attack(c, this.getDammagesFormula().calculate(this));
+	}
+
+	/**
+	 * Decrease fight before go to shop.
+	 */
+	public void decreaseFightBeforeGoToShop() {
+		if( this.fightBeforeGoToShop > 0 )
+			this.fightBeforeGoToShop--;
 	}
 
 	/* (non-Javadoc)
@@ -121,7 +141,7 @@ public abstract class Hero extends Character {
 			Logger.log(this, "Je fuis le combat !");
 			this.fight.flee();
 		}
-	}
+	};
 
 	/**
 	 * Gets the allowed item types.
@@ -129,10 +149,36 @@ public abstract class Hero extends Character {
 	 * @return the allowed item types
 	 */
 	public ArrayList<Type> getAllowedItemTypes() {
-		ArrayList<Type> types = new ArrayList<>();
+		final ArrayList<Type> types = new ArrayList<>();
 		types.add(Type.CONSUMMABLE);
 		return types;
-	};
+	}
+
+	/* (non-Javadoc)
+	 * @see character.Character#getArmor()
+	 */
+	@Override
+	public int getArmor() {
+		return this.inventory.getArmor();
+	}
+
+	/**
+	 * The total of all attributes points must be 10.
+	 * 
+	 * @return the base attributes
+	 * @see character.Character#getBaseAttributes()
+	 */
+	@Override
+	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
+
+	@Override
+	public int getAttribute(Attribute attribute) {
+		int value = super.getAttribute(attribute);
+		for( Entry<Slot, Equipment> e : this.inventory.getEquipment().entrySet() )
+			if( e.getValue().getAttributesBonus().containsKey(attribute) )
+				value += e.getValue().getAttributesBonus().get(attribute);
+		return value;
+	}
 
 	/**
 	 * Gets the class name.
@@ -144,21 +190,13 @@ public abstract class Hero extends Character {
 	}
 
 	/**
-	 * The total of all attributes points must be 10.
-	 * 
-	 * @see character.Character#getBaseAttributes()
-	 */
-	@Override
-	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
-
-	/**
 	 * Gets the dammages formula.
 	 * 
 	 * @return the dammages formula
 	 */
 	public Formula getDammagesFormula() {
 		if( this.inventory.hasEquipment(Slot.MAINHAND) ) {
-			Weapon w = (Weapon) this.inventory.getEquipment(Slot.MAINHAND);
+			final Weapon w = (Weapon) this.inventory.getEquipment(Slot.MAINHAND);
 			return w.getFormula();
 		} else
 			return GlobalFormula.COMBAT_UNARMED.getFormula();
@@ -200,12 +238,42 @@ public abstract class Hero extends Character {
 	}
 
 	/**
+	 * The percent of life the hero should have in total life gain over all his consummables.
+	 * 
+	 * @return the min life gain to keep
+	 */
+	public float getMaxLifeGainToKeep() {
+		return 3;
+	}
+
+	/**
+	 * The percent of life the hero should have in total life gain over all his consummables.
+	 * 
+	 * @return the min life gain to keep
+	 */
+	public float getMinLifeGainToKeep() {
+		return 2;
+	}
+
+	/**
 	 * Gets the time since last update.
 	 * 
 	 * @return the time since last update
 	 */
 	public long getTimeSinceLastUpdate() {
 		return this.timeSinceLastUpdate;
+	}
+
+	/**
+	 * Removes the item.
+	 * 
+	 * @param item
+	 *            the item
+	 * @param n
+	 *            the n
+	 */
+	public void removeItem(final Item item, final int n) {
+		this.inventory.removeItem(item, n);
 	}
 
 	/**
@@ -218,7 +286,12 @@ public abstract class Hero extends Character {
 		this.fight = fight;
 	}
 
-	private int	KOCounter;
+	/**
+	 * Sets the fight before go to shop.
+	 */
+	public void setFightBeforeGoToShop() {
+		this.fightBeforeGoToShop = 1;
+	}
 
 	/**
 	 * Update.
@@ -293,14 +366,6 @@ public abstract class Hero extends Character {
 		}
 	}
 
-	public void addGold(int gain) {
-		this.inventory.addGold(gain);
-	}
-
-	public void addItem(Item item, int n) {
-		this.inventory.addItem(item, n);
-	}
-
 	/**
 	 * Fight use life consumable.
 	 * 
@@ -325,24 +390,6 @@ public abstract class Hero extends Character {
 		}
 
 		toUse.consume(this);
-	}
-
-	/**
-	 * The percent of life the hero should have in total life gain over all his consummables.
-	 * 
-	 * @return the min life gain to keep
-	 */
-	public float getMinLifeGainToKeep() {
-		return 2;
-	}
-
-	/**
-	 * The percent of life the hero should have in total life gain over all his consummables.
-	 * 
-	 * @return the min life gain to keep
-	 */
-	public float getMaxLifeGainToKeep() {
-		return 3;
 	}
 
 	/**
@@ -460,7 +507,7 @@ public abstract class Hero extends Character {
 	private void updateGoal() {
 		if( this.isFighting() && this.shouldFlee() )
 			this.goal = Goal.FLEE;
-		else if( !this.isFighting() && this.fightBeforeGoToShop == 0 && ( this.inventory.isFull() || this.inventory.getTotalLifeGain() < this.getMaxLife() * this.getMinLifeGainToKeep() ) )
+		else if( !this.isFighting() && ( this.fightBeforeGoToShop == 0 ) && ( this.inventory.isFull() || ( this.inventory.getTotalLifeGain() < ( this.getMaxLife() * this.getMinLifeGainToKeep() ) ) ) )
 			this.goal = Goal.SHOP;
 		else if( this.isShopping() && ( this.inventory.hasSomethingToSell() || !this.inventory.isShopChecked() ) )
 			this.goal = Goal.SHOP;
@@ -468,9 +515,5 @@ public abstract class Hero extends Character {
 			this.goal = Goal.DUNGEON;
 		else
 			this.goal = Goal.DUNGEON;
-	}
-
-	public void removeItem(Item item, int n) {
-		this.inventory.removeItem(item, n);
 	}
 }

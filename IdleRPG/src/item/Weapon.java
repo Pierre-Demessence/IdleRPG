@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:22
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package item;
 
@@ -13,6 +13,14 @@ import database.items.Slot;
  * The Class Weapon.
  */
 public abstract class Weapon extends Equipment {
+
+	/* (non-Javadoc)
+	 * @see item.Equipment#getArmorBonus()
+	 */
+	@Override
+	public int getArmorBonus() {
+		return 0;
+	}
 
 	/**
 	 * Gets the dammages.
@@ -41,8 +49,8 @@ public abstract class Weapon extends Equipment {
 	}
 
 	@Override
-	public int getArmorBonus() {
-		return 0;
+	public int getValue() {
+		return super.getValue() + 100;
 	}
 
 }

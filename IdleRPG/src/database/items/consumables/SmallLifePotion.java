@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:24
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package database.items.consumables;
 
@@ -34,14 +34,6 @@ public class SmallLifePotion extends Consumable {
 	@Override
 	public String getName() {
 		return "Small Life Potion";
-	}
-
-	/* (non-Javadoc)
-	 * @see item.Item#getValue()
-	 */
-	@Override
-	public int getValue() {
-		return 10;
 	}
 
 }

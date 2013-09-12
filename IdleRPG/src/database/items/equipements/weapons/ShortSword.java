@@ -1,44 +1,42 @@
+/*
+ * Author : Pierre
+ * Last Update : 12 sept. 2013 - 04:07:21
+ */
 package database.items.equipements.weapons;
 
 import item.Weapon;
-
-import java.util.EnumMap;
-
 import util.Formula;
-import character.Attribute;
 import database.GlobalFormula;
 import database.items.Type;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ShortSword.
+ */
 public class ShortSword extends Weapon {
 
+	/* (non-Javadoc)
+	 * @see item.Weapon#getFormula()
+	 */
 	@Override
 	public Formula getFormula() {
 		return GlobalFormula.COMBAT_SWORD.getFormula();
 	}
 
-	@Override
-	public EnumMap<Attribute, Integer> getAttributesBonus() {
-		return null;
-	}
-
+	/* (non-Javadoc)
+	 * @see item.Item#getName()
+	 */
 	@Override
 	public String getName() {
 		return "Short Sword";
 	}
 
+	/* (non-Javadoc)
+	 * @see item.Item#getType()
+	 */
 	@Override
 	public Type getType() {
 		return Type.SWORD;
-	}
-
-	@Override
-	public int getValue() {
-		return 20;
-	}
-
-	@Override
-	public int getLevel() {
-		return 1;
 	}
 
 }

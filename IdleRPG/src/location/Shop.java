@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:18
  */
 package location;
 
@@ -19,6 +19,7 @@ import util.Logger;
 import character.Hero;
 import database.items.Slot;
 import database.items.consumables.SmallLifePotion;
+import database.items.equipements.weapons.LongSword;
 import database.items.equipements.weapons.ShortSword;
 
 // TODO: Auto-generated Javadoc
@@ -89,6 +90,19 @@ public class Shop implements Location {
 	}
 
 	/**
+	 * Gets the consumables.
+	 * 
+	 * @return the consumables
+	 */
+	public HashSet<Consumable> getConsumables() {
+		final HashSet<Consumable> consos = new HashSet<>();
+		for( final Item i : this.items )
+			if( i instanceof Consumable )
+				consos.add((Consumable) i);
+		return consos;
+	}
+
+	/**
 	 * Gets the count.
 	 * 
 	 * @param i
@@ -109,32 +123,33 @@ public class Shop implements Location {
 	}
 
 	/**
+	 * Gets the equipments.
+	 * 
+	 * @param slot
+	 *            the slot
+	 * @param maxlevel
+	 *            the maxlevel
+	 * @return the equipments
+	 */
+	public TreeSet<Equipment> getEquipments(final Slot slot, final int maxlevel) {
+		final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
+
+		for( final Item i : this.items )
+			if( i instanceof Equipment ) {
+				final Equipment e = (Equipment) i;
+				if( ( ( slot == null ) || e.getSlot().equals(slot) ) && ( ( maxlevel == 0 ) || ( e.getLevel() <= maxlevel ) ) )
+					equipments.add(e);
+			}
+		return equipments;
+	}
+
+	/**
 	 * Gets the items.
 	 * 
 	 * @return the items
 	 */
 	public Set<Item> getItems() {
 		return this.items.uniqueSet();
-	}
-
-	public HashSet<Consumable> getConsumables() {
-		final HashSet<Consumable> consos = new HashSet<>();
-		for( final Item i : this.items )
-			if( i instanceof Consumable )
-				consos.add((Consumable) i);
-		return consos;
-	}
-
-	public TreeSet<Equipment> getEquipments(Slot slot, int maxlevel) {
-		final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
-
-		for( final Item i : this.items )
-			if( i instanceof Equipment ) {
-				Equipment e = (Equipment) i;
-				if( ( slot == null || e.getSlot().equals(slot) ) && ( maxlevel == 0 || e.getLevel() <= maxlevel ) )
-					equipments.add(e);
-			}
-		return equipments;
 	}
 
 	/**
@@ -156,6 +171,7 @@ public class Shop implements Location {
 		this.timeSinceLastRestock = time;
 		this.items.add(new SmallLifePotion(), 10);
 		this.items.add(new ShortSword());
+		this.items.add(new LongSword());
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package item;
 
@@ -11,13 +11,13 @@ import java.util.Random;
  * The Class Loot.
  */
 public class Loot {
-	
+
 	/** The chance. */
 	private final float	chance;
-	
+
 	/** The item. */
 	private final Item	item;
-	
+
 	/** The quantity. */
 	private final int	quantity;
 

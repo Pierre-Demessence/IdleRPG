@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:22
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package location;
 
@@ -17,7 +17,7 @@ public abstract class Dungeon implements Location {
 
 	/** The monsters. */
 	protected ArrayList<Monster>	monsters	= new ArrayList<>();
-	
+
 	/** The name. */
 	protected String				name;
 

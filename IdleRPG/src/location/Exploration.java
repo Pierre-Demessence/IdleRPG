@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:18
  */
 package location;
 
@@ -17,7 +17,7 @@ public class Exploration implements Location {
 
 	/** The instance. */
 	private static Exploration	instance;
-	
+
 	/** The is initialised. */
 	private static boolean		isInitialised;
 

@@ -1,5 +1,10 @@
+/*
+ * Author : Pierre
+ * Last Update : 12 sept. 2013 - 04:07:19
+ */
 package character;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Enum DelayType.
  */
@@ -14,12 +19,14 @@ enum DelayType {
 	/** The fighting. */
 	FIGHTING(1000),
 
+	/** The resurrection. */
+	RESURRECTION(10000),
+
 	/** The shop buying. */
 	SHOP_BUYING(1000),
 
 	/** The shop selling. */
-	SHOP_SELLING(1000),
-	RESURRECTION(10000);
+	SHOP_SELLING(1000);
 
 	/** The delay. */
 	private long	delay;

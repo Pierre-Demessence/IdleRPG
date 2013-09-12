@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package item;
 
@@ -27,31 +27,11 @@ public abstract class Consumable extends Item {
 																				}
 																			};
 
+	/** The Constant LIFE_VALUE_RATIO_ORDER. */
 	public static final Comparator<Consumable>	LIFE_VALUE_RATIO_ORDER		= new Comparator<Consumable>() {
 																				@Override
 																				public int compare(final Consumable o1, final Consumable o2) {
-																					return o1.getLifeGain() / o1.getValue() - o2.getLifeGain() / o2.getValue();
-																				}
-																			};
-
-	public static final Comparator<Consumable>	MANA_VALUE_RATIO_ORDER		= new Comparator<Consumable>() {
-																				@Override
-																				public int compare(final Consumable o1, final Consumable o2) {
-																					return o1.getManaGain() / o1.getValue() - o2.getManaGain() / o2.getValue();
-																				}
-																			};
-
-	public static final Comparator<Consumable>	TOTALGAIN_VALUE_RATIO_ORDER	= new Comparator<Consumable>() {
-																				@Override
-																				public int compare(final Consumable o1, final Consumable o2) {
-																					return o1.getTotalGain() / o1.getValue() - o2.getTotalGain() / o2.getValue();
-																				}
-																			};
-
-	public static final Comparator<Consumable>	TOTAL_GAIN_ORDER			= new Comparator<Consumable>() {
-																				@Override
-																				public int compare(final Consumable o1, final Consumable o2) {
-																					return o1.getTotalGain() - o2.getTotalGain();
+																					return ( o1.getLifeGain() / o1.getValue() ) - ( o2.getLifeGain() / o2.getValue() );
 																				}
 																			};
 
@@ -60,6 +40,30 @@ public abstract class Consumable extends Item {
 																				@Override
 																				public int compare(final Consumable o1, final Consumable o2) {
 																					return o1.getManaGain() - o2.getManaGain();
+																				}
+																			};
+
+	/** The Constant MANA_VALUE_RATIO_ORDER. */
+	public static final Comparator<Consumable>	MANA_VALUE_RATIO_ORDER		= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return ( o1.getManaGain() / o1.getValue() ) - ( o2.getManaGain() / o2.getValue() );
+																				}
+																			};
+
+	/** The Constant TOTAL_GAIN_ORDER. */
+	public static final Comparator<Consumable>	TOTAL_GAIN_ORDER			= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return o1.getTotalGain() - o2.getTotalGain();
+																				}
+																			};
+
+	/** The Constant TOTALGAIN_VALUE_RATIO_ORDER. */
+	public static final Comparator<Consumable>	TOTALGAIN_VALUE_RATIO_ORDER	= new Comparator<Consumable>() {
+																				@Override
+																				public int compare(final Consumable o1, final Consumable o2) {
+																					return ( o1.getTotalGain() / o1.getValue() ) - ( o2.getTotalGain() / o2.getValue() );
 																				}
 																			};
 
@@ -95,6 +99,15 @@ public abstract class Consumable extends Item {
 	 */
 	public abstract int getManaGain();
 
+	/**
+	 * Gets the total gain.
+	 * 
+	 * @return the total gain
+	 */
+	public int getTotalGain() {
+		return this.getLifeGain() + this.getManaGain();
+	}
+
 	/* (non-Javadoc)
 	 * @see item.Item#getType()
 	 */
@@ -103,8 +116,9 @@ public abstract class Consumable extends Item {
 		return Type.CONSUMMABLE;
 	}
 
-	public int getTotalGain() {
-		return this.getLifeGain() + this.getManaGain();
+	@Override
+	public int getValue() {
+		return (int) ( this.getLifeGain() + this.getManaGain() * 1.5 );
 	}
 
 }

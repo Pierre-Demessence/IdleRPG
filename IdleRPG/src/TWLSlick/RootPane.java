@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package TWLSlick;
 
@@ -19,10 +19,10 @@ public class RootPane extends DesktopArea {
 
 	/** The old mouse x. */
 	protected int				oldMouseX;
-	
+
 	/** The old mouse y. */
 	protected int				oldMouseY;
-	
+
 	/** The state. */
 	protected BasicTWLGameState	state;
 

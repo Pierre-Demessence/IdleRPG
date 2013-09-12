@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:23
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package character;
 

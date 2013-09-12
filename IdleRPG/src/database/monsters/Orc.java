@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package database.monsters;
 
@@ -31,7 +31,7 @@ public class Orc extends Monster {
 	 */
 	@Override
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
-		EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
+		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
 		attributes.put(Attribute.CHARISMA, 1);
 		attributes.put(Attribute.CONSTITUTION, 5);
 		attributes.put(Attribute.DEXTERITY, 3);

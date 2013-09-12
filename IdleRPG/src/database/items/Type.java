@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package database.items;
 
@@ -9,13 +9,13 @@ package database.items;
  * The Enum Type.
  */
 public enum Type {
-	
+
 	/** The consummable. */
 	CONSUMMABLE,
-	
-	/** The useless. */
-	USELESS,
-	
+
 	/** The sword. */
-	SWORD;
+	SWORD,
+
+	/** The useless. */
+	USELESS;
 }

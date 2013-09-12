@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:22
+ * Last Update : 12 sept. 2013 - 04:07:20
  */
 package character;
 
@@ -17,6 +17,10 @@ import database.GlobalFormula;
  * The Class Monster.
  */
 public abstract class Monster extends Character implements Cloneable {
+
+	public Monster() {
+		this.init();
+	}
 
 	/* (non-Javadoc)
 	 * @see character.Character#attack(character.Character)
@@ -48,14 +52,6 @@ public abstract class Monster extends Character implements Cloneable {
 		this.attack(opponent);
 	}
 
-	/**
-	 * The total of all attributes points must be 10 + 5 per level.
-	 * 
-	 * @see character.Character#getBaseAttributes()
-	 */
-	@Override
-	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
-
 	/* (non-Javadoc)
 	 * @see character.Character#getArmor()
 	 */
@@ -70,6 +66,15 @@ public abstract class Monster extends Character implements Cloneable {
 	 * @return the base armor
 	 */
 	public abstract int getBaseArmor();
+
+	/**
+	 * The total of all attributes points must be 10 + 5 per level.
+	 * 
+	 * @return the base attributes
+	 * @see character.Character#getBaseAttributes()
+	 */
+	@Override
+	public abstract EnumMap<Attribute, Integer> getBaseAttributes();
 
 	/**
 	 * Gets the experience loot.

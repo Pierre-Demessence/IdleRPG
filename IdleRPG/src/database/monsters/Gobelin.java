@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:21
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package database.monsters;
 
@@ -33,7 +33,7 @@ public class Gobelin extends Monster {
 	@Override
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
 
-		EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
+		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
 		attributes.put(Attribute.CHARISMA, 1);
 		attributes.put(Attribute.CONSTITUTION, 2);
 		attributes.put(Attribute.DEXTERITY, 1);
@@ -73,7 +73,7 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public ArrayList<Loot> getLoots() {
-		ArrayList<Loot> loots = new ArrayList<>();
+		final ArrayList<Loot> loots = new ArrayList<>();
 		loots.add(new Loot(new Leather(), 0.5f, 1));
 		return loots;
 	}

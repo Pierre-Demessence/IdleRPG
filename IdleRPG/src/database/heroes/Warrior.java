@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:24
+ * Last Update : 12 sept. 2013 - 04:07:21
  */
 package database.heroes;
 
@@ -10,6 +10,7 @@ import java.util.EnumMap;
 import character.Attribute;
 import character.Hero;
 import database.items.Type;
+import database.items.equipements.weapons.ShortSword;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,6 +26,8 @@ public class Warrior extends Hero {
 	 */
 	public Warrior(final String name) {
 		super(name);
+		this.addGold(200);
+		this.addItem(new ShortSword(), 2);
 	}
 
 	/* (non-Javadoc)
@@ -32,7 +35,7 @@ public class Warrior extends Hero {
 	 */
 	@Override
 	public ArrayList<Type> getAllowedItemTypes() {
-		ArrayList<Type> types = super.getAllowedItemTypes();
+		final ArrayList<Type> types = super.getAllowedItemTypes();
 		types.add(Type.SWORD);
 		return types;
 	}
@@ -42,7 +45,7 @@ public class Warrior extends Hero {
 	 */
 	@Override
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
-		EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
+		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
 		attributes.put(Attribute.CHARISMA, 1);
 		attributes.put(Attribute.CONSTITUTION, 2);
 		attributes.put(Attribute.DEXTERITY, 2);

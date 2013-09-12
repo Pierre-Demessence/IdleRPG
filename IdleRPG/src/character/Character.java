@@ -1,6 +1,6 @@
 /*
  * Author : Pierre
- * Last Update : 11 sept. 2013 - 16:36:20
+ * Last Update : 12 sept. 2013 - 04:07:19
  */
 package character;
 
@@ -28,12 +28,15 @@ public abstract class Character {
 	 * Instantiates a new character.
 	 */
 	public Character() {
-		this.life = this.getMaxLife();
-		this.mana = this.getMaxMana();
+
 	}
 
-	public boolean isKO() {
-		return this.life <= 0;
+	/**
+	 * To call at the end of the object creation process.
+	 */
+	protected void init() {
+		this.life = this.getMaxLife();
+		this.mana = this.getMaxMana();
 	}
 
 	/**
@@ -186,6 +189,15 @@ public abstract class Character {
 	 */
 	public String getName() {
 		return this.name;
+	}
+
+	/**
+	 * Checks if is ko.
+	 * 
+	 * @return true, if is ko
+	 */
+	public boolean isKO() {
+		return this.life <= 0;
 	}
 
 }
