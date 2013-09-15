@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:20
- */
 package gui.widget;
 
 import item.Item;
@@ -20,7 +16,6 @@ import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShopInventory.
  */

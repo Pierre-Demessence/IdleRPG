@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:19
- */
 package item;
 
 import java.util.ArrayList;
@@ -11,9 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import util.Logger;
 import character.Hero;
-import database.items.Type;
+import database.items.ItemType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Consumable.
  */
@@ -112,8 +107,8 @@ public abstract class Consumable extends Item {
 	 * @see item.Item#getType()
 	 */
 	@Override
-	public Type getType() {
-		return Type.CONSUMMABLE;
+	public ItemType getType() {
+		return ItemType.CONSUMMABLE;
 	}
 
 	/* (non-Javadoc)

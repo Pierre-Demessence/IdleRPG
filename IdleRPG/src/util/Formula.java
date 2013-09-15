@@ -6,8 +6,9 @@ package util;
 
 import java.util.Random;
 
-import character.Attribute;
 import character.Character;
+import database.characters.Attribute;
+import database.characters.heroes.Warrior;
 import de.congrace.exp4j.Calculable;
 import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.ExpressionBuilder;
@@ -96,7 +97,7 @@ public class Formula {
 	 * @see Formula#calculate(Character)
 	 */
 	public int calculateMax(final Character c) {
-		final String newFormula = this.toString().replaceAll("DICE\\((\\d+), *(\\d)+\\)", "$1 * $2");
+		final String newFormula = this.toString().replaceAll("DICE\\((\\d+|\\w{3}), *(\\d+|\\w{3})\\)", "$1 * $2");
 		final Formula f2 = new Formula(newFormula);
 		return f2.calculate(c);
 	}
@@ -110,7 +111,7 @@ public class Formula {
 	 * @see Formula#calculate(Character)
 	 */
 	public int calculateMin(final Character c) {
-		final String newFormula = this.toString().replaceAll("DICE\\((\\d+), *\\d+\\)", "$1");
+		final String newFormula = this.toString().replaceAll("DICE\\((\\d+|\\w{3}), *(\\d+|\\w{3})\\)", "$1");
 		final Formula f2 = new Formula(newFormula);
 		return f2.calculate(c);
 	}
@@ -130,5 +131,13 @@ public class Formula {
 	 */
 	private int calculate() {
 		return (int) Math.round(this.formula.calculate());
+	}
+
+	public static void main(String[] args) {
+		Warrior hero = new Warrior("toto");
+		int CON = 20, STR = 30;
+		Formula formula = new Formula("DICE(2, " + CON + ") + DICE(1, " + STR + ")");
+		System.out.println("Min: " + formula.calculateMin(hero));
+		System.out.println("Max: " + formula.calculateMax(hero));
 	}
 }

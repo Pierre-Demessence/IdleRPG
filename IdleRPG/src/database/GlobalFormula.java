@@ -12,10 +12,15 @@ import util.Formula;
 public enum GlobalFormula {
 
 	/** The combat with sword formula. */
-	COMBAT_SWORD("2 * STR + 2 * DEX + CON"),
+	DAMAGE_SWORD("2 * STR + 2 * DEX + CON"),
 
 	/** The combat unarmed formula. */
-	COMBAT_UNARMED("2 * STR + CON"),
+	DAMAGE_UNARMED("DICE(STR, 100)"),
+	// COMBAT_UNARMED("2 * STR + CON"),
+
+	ACCURACY("DEX + INT"),
+
+	DODGE("DEX + INT"),
 
 	/** The life max formula. */
 	LIFE_MAX("3 * CON + 2 * STR"),

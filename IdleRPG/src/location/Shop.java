@@ -1,11 +1,7 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:18
- */
 package location;
 
+import item.Armor;
 import item.Consumable;
-import item.Equipment;
 import item.Item;
 
 import java.util.Collections;
@@ -13,26 +9,22 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import main.IdleRPG;
+
 import org.apache.commons.collections4.bag.HashBag;
 
 import util.Logger;
 import character.Hero;
-import database.items.Slot;
+import database.items.EquipmentSlot;
 import database.items.consumables.SmallLifePotion;
-import database.items.equipements.weapons.LongSword;
-import database.items.equipements.weapons.ShortSword;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Shop.
  */
 public class Shop implements Location {
 
 	/** The instance. */
-	private static Shop		instance;
-
-	/** The is initialised. */
-	private static boolean	isInitialised;
+	private static Shop	INSTANCE;
 
 	/**
 	 * Gets the single instance of Shop.
@@ -40,23 +32,20 @@ public class Shop implements Location {
 	 * @return single instance of Shop
 	 */
 	public static final Shop getInstance() {
-		if( !Shop.isInitialised )
+		if( INSTANCE == null )
 			Shop.init();
-		return Shop.instance;
+		return Shop.INSTANCE;
 	}
 
 	/**
 	 * Inits the.
 	 */
 	private static final void init() {
-
-		Shop.instance = new Shop();
-
-		Shop.isInitialised = true;
+		Shop.INSTANCE = new Shop();
 	}
 
 	/** The delay before restock. */
-	private final long			delayBeforeRestock		= 60 * 1000;
+	private final static long	DELAY_BEFORE_RESTOCK	= 60 * 1000;
 
 	/** The items. */
 	private final HashBag<Item>	items;
@@ -82,7 +71,7 @@ public class Shop implements Location {
 	 *            the n
 	 */
 	public void buy(final Hero hero, final Item i, final int n) {
-		final int totalValue = (int) Math.floor(i.getValue() / 2) * n;
+		final int totalValue = i.getValue() / 2 * n;
 		hero.addGold(+totalValue);
 		Logger.log(hero, "Je vend " + n + " " + i.getName() + " pour un total de " + totalValue + "po.");
 		hero.removeItem(i, n);
@@ -119,7 +108,7 @@ public class Shop implements Location {
 	 * @return the delay before restock
 	 */
 	public long getDelayBeforeRestock() {
-		return this.delayBeforeRestock;
+		return Shop.DELAY_BEFORE_RESTOCK;
 	}
 
 	/**
@@ -131,12 +120,12 @@ public class Shop implements Location {
 	 *            the maxlevel
 	 * @return the equipments
 	 */
-	public TreeSet<Equipment> getEquipments(final Slot slot, final int maxlevel) {
-		final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
+	public TreeSet<Armor> getEquipments(final EquipmentSlot slot, final int maxlevel) {
+		final TreeSet<Armor> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
 
 		for( final Item i : this.items )
-			if( i instanceof Equipment ) {
-				final Equipment e = (Equipment) i;
+			if( i instanceof Armor ) {
+				final Armor e = (Armor) i;
 				if( ( ( slot == null ) || e.getSlot().equals(slot) ) && ( ( maxlevel == 0 ) || ( e.getLevel() <= maxlevel ) ) )
 					equipments.add(e);
 			}
@@ -169,9 +158,8 @@ public class Shop implements Location {
 	 */
 	public void restock(final long time) {
 		this.timeSinceLastRestock = time;
-		this.items.add(new SmallLifePotion(), 10);
-		this.items.add(new ShortSword());
-		this.items.add(new LongSword());
+		int countAliveHeroes = IdleRPG.getInstance().countAliveHeroes();
+		this.items.add(new SmallLifePotion(), countAliveHeroes * 2);
 	}
 
 	/**

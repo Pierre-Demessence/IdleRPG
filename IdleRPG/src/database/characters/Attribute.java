@@ -2,7 +2,7 @@
  * Author : Pierre
  * Last Update : 12 sept. 2013 - 04:07:18
  */
-package character;
+package database.characters;
 
 /**
  * The Enum Attribute.

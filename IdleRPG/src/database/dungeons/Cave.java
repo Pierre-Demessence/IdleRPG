@@ -5,7 +5,7 @@
 package database.dungeons;
 
 import location.Dungeon;
-import database.monsters.Gobelin;
+import database.characters.monsters.Gobelin;
 
 /**
  * The Class Cave.

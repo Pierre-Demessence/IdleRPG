@@ -4,7 +4,6 @@
  */
 package gui;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Enum ScreenState.
  */

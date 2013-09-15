@@ -1,28 +1,45 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:19
- */
 package item;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map.Entry;
 
-import character.Attribute;
-import database.items.Slot;
+import database.characters.Attribute;
+import database.factories.ModifierFactory;
+import database.factories.ModifierFactory.ModifierSlot;
+import database.items.EquipmentSlot;
+import database.items.ModifierQuality;
 
-// TODO: Auto-generated Javadoc
-// TODO: Implémenter un système de bonus d'objet. (De force, de feu, de vitalité, etc...).
-/**
- * The Class Equipment.
- */
 public abstract class Equipment extends Item {
 
-	/**
-	 * Gets the armor bonus.
-	 * 
-	 * @return the armor bonus
-	 */
-	public abstract int getArmorBonus();
+	protected ArrayList<EquipmentModifier>	modifiers;
+
+	public Equipment(boolean modifiers, ModifierSlot slot) {
+		this.modifiers = new ArrayList<>();
+		if( modifiers )
+			this.addRandomModifiers(this.getMaxModifiers(), slot);
+	}
+
+	private int getMaxModifiers() {
+		return 1;
+	}
+
+	protected void addRandomModifiers(int n, ModifierSlot slot) {
+
+		for( int i = 0 ; i < n ; i++ ) {
+			ModifierQuality mq = ModifierQuality.getRandomModifierQuality();
+			if( mq != null )
+				this.addModifier(ModifierFactory.getModifier(slot, mq));
+		}
+	}
+
+	protected void addModifier(EquipmentModifier em) {
+		if( em != null ) {
+			this.modifiers.add(em);
+			Collections.sort(this.modifiers);
+		}
+	}
 
 	/**
 	 * Gets the attributes bonus.
@@ -31,6 +48,9 @@ public abstract class Equipment extends Item {
 	 */
 	public EnumMap<Attribute, Integer> getAttributesBonus() {
 		final EnumMap<Attribute, Integer> attributesBonus = new EnumMap<>(Attribute.class);
+		for( EquipmentModifier em : this.modifiers )
+			for( Entry<Attribute, Integer> e : em.getAttributesBonus().entrySet() )
+				attributesBonus.put(e.getKey(), attributesBonus.get(e.getKey()) + e.getValue());
 		return attributesBonus;
 	}
 
@@ -40,8 +60,15 @@ public abstract class Equipment extends Item {
 	 * @return the level
 	 */
 	public int getLevel() {
-		// TODO En fonction de la valeur.
-		return 1;
+		return (int) Math.ceil(this.getValue() / 750.0f);
+	}
+
+	@Override
+	public String getName() {
+		String finalName = this.getBaseName();
+		for( EquipmentModifier em : this.modifiers )
+			finalName = em.modifyName(finalName);
+		return finalName;
 	}
 
 	/**
@@ -49,14 +76,13 @@ public abstract class Equipment extends Item {
 	 * 
 	 * @return the slot
 	 */
-	public abstract Slot getSlot();
+	public abstract EquipmentSlot getSlot();
 
-	/* (non-Javadoc)
-	 * @see item.Item#getValue()
-	 */
 	@Override
 	public int getValue() {
-		int value = this.getArmorBonus() * 50;
+		int value = 0;
+		for( EquipmentModifier em : this.modifiers )
+			value += em.getValueBonus();
 		for( final Entry<Attribute, Integer> e : this.getAttributesBonus().entrySet() )
 			value += e.getValue() * 50;
 		return value;

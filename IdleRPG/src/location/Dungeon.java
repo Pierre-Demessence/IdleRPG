@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:20
- */
 package location;
 
 import java.util.ArrayList;
@@ -9,7 +5,6 @@ import java.util.Random;
 
 import character.Monster;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Dungeon.
  */
@@ -19,7 +14,7 @@ public abstract class Dungeon implements Location {
 	protected ArrayList<Monster>	monsters	= new ArrayList<>();
 
 	/** The name. */
-	protected String				name;
+	private String					name;
 
 	/**
 	 * Instantiates a new dungeon.
@@ -29,6 +24,10 @@ public abstract class Dungeon implements Location {
 	 */
 	public Dungeon(final String name) {
 		this.name = name;
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 	/**

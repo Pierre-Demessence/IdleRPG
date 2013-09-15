@@ -2,15 +2,15 @@
  * Author : Pierre
  * Last Update : 12 sept. 2013 - 04:07:20
  */
-package database.monsters;
+package database.characters.monsters;
 
 import item.Loot;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 
-import character.Attribute;
 import character.Monster;
+import database.characters.Attribute;
 
 /**
  * The Class Orc.

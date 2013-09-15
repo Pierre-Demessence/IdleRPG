@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:18
- */
 package location;
 
 import java.util.ArrayList;
@@ -9,17 +5,13 @@ import java.util.Random;
 
 import database.dungeons.Cave;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Exploration.
  */
 public class Exploration implements Location {
 
 	/** The instance. */
-	private static Exploration	instance;
-
-	/** The is initialised. */
-	private static boolean		isInitialised;
+	private static Exploration	INSTANCE;
 
 	/**
 	 * Gets the single instance of Exploration.
@@ -27,20 +19,18 @@ public class Exploration implements Location {
 	 * @return single instance of Exploration
 	 */
 	public static final Exploration getInstance() {
-		if( !Exploration.isInitialised )
+		if( INSTANCE == null )
 			Exploration.init();
-		return Exploration.instance;
+		return Exploration.INSTANCE;
 	}
 
 	/**
 	 * Inits the.
 	 */
 	private static final void init() {
+		Exploration.INSTANCE = new Exploration();
+		Exploration.INSTANCE.dungeons.add(new Cave());
 
-		Exploration.instance = new Exploration();
-		Exploration.instance.dungeons.add(new Cave());
-
-		Exploration.isInitialised = true;
 	}
 
 	/** The dungeons. */
@@ -51,7 +41,6 @@ public class Exploration implements Location {
 	 */
 	private Exploration() {
 		this.dungeons = new ArrayList<>();
-		this.dungeons.add(new Cave());
 	}
 
 	/**

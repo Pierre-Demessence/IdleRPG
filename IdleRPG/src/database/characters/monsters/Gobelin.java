@@ -2,15 +2,15 @@
  * Author : Pierre
  * Last Update : 12 sept. 2013 - 23:21:15
  */
-package database.monsters;
+package database.characters.monsters;
 
 import item.Loot;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 
-import character.Attribute;
 import character.Monster;
+import database.characters.Attribute;
 import database.items.useless.Leather;
 
 /**
@@ -48,7 +48,7 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public int getExperienceLoot() {
-		return 10;
+		return 100;
 	}
 
 	/* (non-Javadoc)

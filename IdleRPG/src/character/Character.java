@@ -5,10 +5,12 @@
 package character;
 
 import java.util.EnumMap;
+import java.util.Random;
 
 import util.Formula;
 import util.Logger;
 import database.GlobalFormula;
+import database.characters.Attribute;
 
 /**
  * The Class Character.
@@ -81,8 +83,18 @@ public abstract class Character {
 	 *            the dammages to deal to the opponent
 	 */
 	public void attack(final Character c, final int dammages) {
-		Logger.log(this, "J'attaque " + c.getName() + " et fait " + dammages + " dégâts.");
-		c.defend(dammages);
+		if( this.touch(c) ) {
+			Logger.log(this, "J'attaque " + c.getName() + " et fait " + dammages + " dégâts.");
+			c.defend(dammages);
+		} else
+			Logger.log(this, "J'attaque " + c.getName() + " mais l'attaque échoue.");
+	}
+
+	private boolean touch(Character c) {
+		int x = GlobalFormula.ACCURACY.getFormula().calculate(this) - GlobalFormula.DODGE.getFormula().calculate(this);
+		float y = (float) ( 1 / ( 1 + Math.exp(-x) ) );
+		Random r = new Random();
+		return r.nextFloat() <= y;
 	}
 
 	/**
@@ -119,7 +131,7 @@ public abstract class Character {
 	private void defend(final int dammages) {
 		final int finaldammages = dammages - this.getArmor();
 		Logger.log(this, "Je reçois " + finaldammages + "[+" + this.getArmor() + "].");
-		Logger.log(this, "Ma vie passe de " + this.getLife() + " à " + ( this.getLife() - finaldammages ) + ".");
+		Logger.log(this, "Ma vie passe de " + this.getLife() + " à " + Math.max(0, this.getLife() - finaldammages) + ".");
 		this.addLife(-finaldammages);
 	}
 

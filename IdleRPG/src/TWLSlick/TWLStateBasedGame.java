@@ -22,7 +22,6 @@ import de.matthiasmann.twl.renderer.Renderer;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 
-// TODO: Auto-generated Javadoc
 /**
  * A StateBaseGame subclass with support for a TWL Ui per state.
  * 

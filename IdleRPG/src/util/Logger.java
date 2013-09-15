@@ -1,12 +1,7 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:19
- */
 package util;
 
 import character.Character;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Logger.
  */

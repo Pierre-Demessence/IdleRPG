@@ -1,13 +1,8 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
 package character;
 
 import item.Loot;
 import util.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Fight.
  */
@@ -51,7 +46,7 @@ public class Fight {
 		else
 			this.doTurn(this.monster, this.hero);
 		this.heroTurn = !this.heroTurn;
-		if( this.hasHeroFleed() )
+		if( this.isSomeoneKO() || this.hasHeroFleed() )
 			this.endFight();
 	}
 
@@ -64,10 +59,7 @@ public class Fight {
 	 *            the defenser
 	 */
 	public void doTurn(final Character attacker, final Character defenser) {
-		if( !this.isEnded() ) {
-			attacker.doFight(defenser);
-			this.verifyResult();
-		}
+		attacker.doFight(defenser);
 	}
 
 	/**
@@ -89,6 +81,7 @@ public class Fight {
 	 */
 	public void flee() {
 		Logger.log("Le monstre ennemi a une attaque d'opportunité !");
+		this.monster.doFight(this.hero);
 		this.hasHeroFleed = true;
 	}
 
@@ -115,7 +108,7 @@ public class Fight {
 	 * 
 	 * @return true, if the fight is ended
 	 */
-	private boolean isEnded() {
+	private boolean isSomeoneKO() {
 		return ( ( this.hero.isKO() ) || ( this.monster.isKO() ) );
 	}
 
@@ -126,15 +119,7 @@ public class Fight {
 		Logger.log(this.hero.getName() + " est mis KO.");
 		final int goldLost = Math.round(this.hero.getGold() * ( (float) this.monster.getLevel() / 100 ));
 		Logger.log("Il perd " + goldLost + "po que le " + this.monster.getName() + " lui vole !");
-		this.hero.addGold(goldLost);
-	}
-
-	/**
-	 * Verify result.
-	 */
-	private void verifyResult() {
-		if( this.isEnded() )
-			this.endFight();
+		this.hero.addGold(-goldLost);
 	}
 
 	/**
@@ -142,13 +127,13 @@ public class Fight {
 	 */
 	private void win() {
 		Logger.log(this.hero.getName() + " a gagné son combat !");
-		Logger.log("Il gagne " + this.monster.getGoldLoot() + "po ainsi que " + this.monster.getExperienceLoot() + "xp !");
+		Logger.log(this.hero, "Je gagne " + this.monster.getGoldLoot() + "po ainsi que " + this.monster.getExperienceLoot() + "xp !");
 		this.hero.addGold(this.monster.getGoldLoot());
 		this.hero.addExperience(this.monster.getExperienceLoot());
 		if( this.monster.getLoots() != null )
 			for( final Loot l : this.monster.getLoots() )
 				if( l.test() ) {
-					Logger.log("Il trouve " + l.getQuantity() + " " + l.getItem().getName() + " !");
+					Logger.log(this.hero, "Je trouve " + l.getQuantity() + " " + l.getItem().getName() + " !");
 					this.hero.addItem(l.getItem(), l.getQuantity());
 				}
 		this.hero.decreaseFightBeforeGoToShop();

@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
 package gui.widget;
 
 import org.newdawn.slick.GameContainer;
@@ -11,7 +7,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.matthiasmann.twl.ColumnLayout;
 import de.matthiasmann.twl.ResizableFrame;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HeroesList.
  */

@@ -4,38 +4,17 @@
  */
 package database.items.equipements.weapons;
 
-import item.Weapon;
-import util.Formula;
-import database.GlobalFormula;
-import database.items.Type;
-
 /**
  * The Class ShortSword.
  */
-public class ShortSword extends Weapon {
-
-	/* (non-Javadoc)
-	 * @see item.Weapon#getFormula()
-	 */
-	@Override
-	public Formula getFormula() {
-		return GlobalFormula.COMBAT_SWORD.getFormula();
-	}
+public class ShortSword extends Sword {
 
 	/* (non-Javadoc)
 	 * @see item.Item#getName()
 	 */
 	@Override
-	public String getName() {
+	public String getBaseName() {
 		return "Short Sword";
-	}
-
-	/* (non-Javadoc)
-	 * @see item.Item#getType()
-	 */
-	@Override
-	public Type getType() {
-		return Type.SWORD;
 	}
 
 }

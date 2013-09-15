@@ -1,17 +1,13 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
-package database.heroes;
+package database.characters.heroes;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 
-import character.Attribute;
 import character.Hero;
-import database.items.Type;
+import database.characters.Attribute;
+import database.characters.AttributePriority;
+import database.items.ItemType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Warrior.
  */
@@ -31,9 +27,9 @@ public class Warrior extends Hero {
 	 * @see character.Hero#getAllowedItemTypes()
 	 */
 	@Override
-	public ArrayList<Type> getAllowedItemTypes() {
-		final ArrayList<Type> types = super.getAllowedItemTypes();
-		types.add(Type.SWORD);
+	public ArrayList<ItemType> getAllowedItemTypes() {
+		final ArrayList<ItemType> types = super.getAllowedItemTypes();
+		types.add(ItemType.SWORD);
 		return types;
 	}
 
@@ -50,6 +46,17 @@ public class Warrior extends Hero {
 		attributes.put(Attribute.STRENGH, 3);
 		attributes.put(Attribute.WISDOM, 1);
 		return attributes;
+	}
+
+	@Override
+	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
+		EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
+		res.put(Attribute.STRENGH, AttributePriority.HIGH);
+		res.put(Attribute.CONSTITUTION, AttributePriority.HIGH);
+		res.put(Attribute.INTELLIGENCE, AttributePriority.LOW);
+		res.put(Attribute.WISDOM, AttributePriority.LOW);
+		res.put(Attribute.CHARISMA, AttributePriority.LOW);
+		return res;
 	}
 
 }

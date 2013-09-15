@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
 package main;
 
 import gui.HeroesStatus;
@@ -21,16 +17,27 @@ import org.newdawn.slick.util.ResourceLoader;
 import util.NameGenerator;
 import TWLSlick.TWLStateBasedGame;
 import character.Hero;
-import database.heroes.Warrior;
+import database.characters.heroes.Warrior;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IdleRPG.
  */
 public class IdleRPG extends TWLStateBasedGame {
 
 	/** The instance. */
-	public static IdleRPG	instance;
+	private static IdleRPG	INSTANCE;
+
+	public static final int	KO_NUMBER_FOR_DEAD	= 3;
+
+	public static final int	MIN_ALIVE_HEROES	= 1;
+
+	public static final int	GAME_SPEED			= 1;
+
+	public static final int	LEVEL_CAP			= 3;
+
+	private long			beginTime;
+
+	private static long[]	EXPERIENCE_NEED		= new long[LEVEL_CAP - 1];
 
 	/**
 	 * Gets the single instance of IdleRPG.
@@ -38,7 +45,23 @@ public class IdleRPG extends TWLStateBasedGame {
 	 * @return single instance of IdleRPG
 	 */
 	public static IdleRPG getInstance() {
-		return IdleRPG.instance;
+		if( INSTANCE == null )
+			IdleRPG.init();
+		return IdleRPG.INSTANCE;
+	}
+
+	private static void init() {
+		INSTANCE = new IdleRPG();
+		INSTANCE.addHero();
+
+		IdleRPG.EXPERIENCE_NEED[0] = 100; // Niveau 2
+		IdleRPG.EXPERIENCE_NEED[1] = 500; // Niveau 3
+	}
+
+	public static long getExperienceNeed(int level) {
+		if( level < 2 )
+			return 0;
+		return IdleRPG.EXPERIENCE_NEED[level - 2];
 	}
 
 	/**
@@ -49,9 +72,11 @@ public class IdleRPG extends TWLStateBasedGame {
 	 */
 	public static void main(final String[] args) {
 		try {
-			final AppGameContainer container = new AppGameContainer(new IdleRPG());
+			IdleRPG game = IdleRPG.getInstance();
+			final AppGameContainer container = new AppGameContainer(game);
 			container.setDisplayMode(800, 600, false);
-			container.setTargetFrameRate(60);
+			container.setTargetFrameRate(60 * IdleRPG.GAME_SPEED);
+			container.setShowFPS(false);
 			container.start();
 		} catch( final SlickException e ) {
 			e.printStackTrace();
@@ -76,15 +101,17 @@ public class IdleRPG extends TWLStateBasedGame {
 	/**
 	 * Instantiates a new idle rpg.
 	 */
-	public IdleRPG() {
+	private IdleRPG() {
 		super("IdleRPG");
-		IdleRPG.instance = this;
 
 		this.heroList = new ArrayList<>();
 		this.shop = Shop.getInstance();
 		this.nameGenerator = new NameGenerator(this);
+		this.beginTime = System.currentTimeMillis();
+	}
 
-		this.addHero();
+	public long getBeginTime() {
+		return this.beginTime;
 	}
 
 	/**
@@ -113,6 +140,30 @@ public class IdleRPG extends TWLStateBasedGame {
 	 */
 	public ArrayList<Hero> getHeroList() {
 		return this.heroList;
+	}
+
+	public int countAliveHeroes() {
+		int res = 0;
+		for( Hero h : this.heroList )
+			if( !h.isDead() )
+				res++;
+		return res;
+	}
+
+	public ArrayList<Hero> getAliveHeroes() {
+		ArrayList<Hero> res = new ArrayList<>();
+		for( Hero h : this.heroList )
+			if( !h.isDead() )
+				res.add(h);
+		return res;
+	}
+
+	public ArrayList<Hero> getDeadHeroes() {
+		ArrayList<Hero> res = new ArrayList<>();
+		for( Hero h : this.heroList )
+			if( h.isDead() )
+				res.add(h);
+		return res;
 	}
 
 	/**
@@ -172,7 +223,7 @@ public class IdleRPG extends TWLStateBasedGame {
 	/**
 	 * Adds the hero.
 	 */
-	private void addHero() {
+	public void addHero() {
 		final Hero h1 = new Warrior(this.nameGenerator.generate());
 		this.heroList.add(h1);
 	}

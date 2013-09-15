@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
 package character;
 
 import item.Consumable;
@@ -12,54 +8,58 @@ import item.Weapon;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.TreeSet;
 
 import location.Dungeon;
 import location.Exploration;
 import location.Location;
 import location.Shop;
+import main.IdleRPG;
 import util.Formula;
 import util.Logger;
 import database.GlobalFormula;
-import database.items.Slot;
-import database.items.Type;
+import database.characters.Attribute;
+import database.characters.AttributePriority;
+import database.items.EquipmentSlot;
+import database.items.ItemType;
 
-// TODO: Auto-generated Javadoc
-// TODO: Implémenter un system de leveling.
 /**
  * The Class Hero.
  */
 public abstract class Hero extends Character {
 
 	/** The delay before new update. */
-	private DelayType		delayBeforeNewUpdate;
+	private DelayType					delayBeforeNewUpdate;
 
 	/** The experience. */
-	private int				experience;
+	private int							experience;
 
 	/** The fight. */
-	private Fight			fight;
+	private Fight						fight;
 
 	/** The fight before go to shop. */
-	private int				fightBeforeGoToShop;
+	private int							fightBeforeGoToShop;
 
 	/** The goal. */
-	private Goal			goal;
+	private Goal						goal;
 
 	/** The inventory. */
-	private final Inventory	inventory;
+	private final Inventory				inventory;
 
 	/** The KO counter. */
-	private int				KOCounter;
+	private int							KOCounter;
 
 	/** The level. */
-	private final int		level;
+	private int							level;
 
 	/** The location. */
-	private Location		location;
+	private Location					location;
 
 	/** The time since last update. */
-	private long			timeSinceLastUpdate	= Integer.MIN_VALUE;
+	private long						timeSinceLastUpdate	= Integer.MIN_VALUE;
+
+	private EnumMap<Attribute, Integer>	attributesLeveling;
 
 	/**
 	 * Instantiates a new hero.
@@ -74,7 +74,54 @@ public abstract class Hero extends Character {
 		this.location = Exploration.getInstance();
 		this.delayBeforeNewUpdate = DelayType.EXPLORATION;
 		this.inventory = new Inventory(this);
+		this.attributesLeveling = new EnumMap<>(Attribute.class);
 		this.init();
+	}
+
+	private void upAttribute(Attribute attribute) {
+		this.attributesLeveling.put(attribute, this.attributesLeveling.get(attribute) + 1);
+	}
+
+	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
+		EnumMap<Attribute, AttributePriority> res = new EnumMap<>(Attribute.class);
+		for( Attribute a : Attribute.values() )
+			res.put(a, AttributePriority.NORMAL);
+		return res;
+	}
+
+	private void levelUp() {
+		Logger.log(this, "Je gagne un niveau !");
+		this.level++;
+
+		int totalFactor = 0;
+		for( AttributePriority ap : this.getAttributePriority().values() )
+			totalFactor += ap.getFactor();
+
+		for( int i = 1 ; i <= 5 ; i++ ) {
+			float rFloat = new Random().nextFloat();
+			int curFactor = 0;
+			for( Attribute a : Attribute.values() ) {
+				curFactor += (float) this.getAttributePriority().get(a).getFactor();
+				if( rFloat <= (float) curFactor / totalFactor ) {
+					Logger.log(this, "Je gagne un point en " + a.name());
+					this.upAttribute(a);
+					break;
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		Logger.log(this, "Je viens d'arriver dans le monde !");
+		for( Attribute a : Attribute.values() )
+			this.attributesLeveling.put(a, 0);
+	}
+
+	public int getAttributeLeveling(Attribute a) {
+		Integer value = this.attributesLeveling.get(a);
+		return ( value == null ? 0 : value );
 	}
 
 	/**
@@ -86,6 +133,10 @@ public abstract class Hero extends Character {
 	public void addExperience(final int gain) {
 		this.experience += gain;
 		this.experience = Math.max(0, this.experience);
+		while( this.level < IdleRPG.LEVEL_CAP && this.experience >= IdleRPG.getExperienceNeed(this.level + 1) ) {
+			this.experience -= IdleRPG.getExperienceNeed(this.level + 1);
+			this.levelUp();
+		}
 	}
 
 	/**
@@ -149,9 +200,9 @@ public abstract class Hero extends Character {
 	 * 
 	 * @return the allowed item types
 	 */
-	public ArrayList<Type> getAllowedItemTypes() {
-		final ArrayList<Type> types = new ArrayList<>();
-		types.add(Type.CONSUMMABLE);
+	public ArrayList<ItemType> getAllowedItemTypes() {
+		final ArrayList<ItemType> types = new ArrayList<>();
+		types.add(ItemType.CONSUMMABLE);
 		return types;
 	}
 
@@ -169,9 +220,10 @@ public abstract class Hero extends Character {
 	@Override
 	public int getAttribute(final Attribute attribute) {
 		int value = super.getAttribute(attribute);
-		for( final Entry<Slot, Equipment> e : this.inventory.getEquipment().entrySet() )
+		for( final Entry<EquipmentSlot, Equipment> e : this.inventory.getEquipment().entrySet() )
 			if( e.getValue().getAttributesBonus().containsKey(attribute) )
 				value += e.getValue().getAttributesBonus().get(attribute);
+		value += this.getAttributeLeveling(attribute);
 		return value;
 	}
 
@@ -200,11 +252,11 @@ public abstract class Hero extends Character {
 	 */
 	@Override
 	public Formula getDammagesFormula() {
-		if( this.inventory.hasEquipment(Slot.MAINHAND) ) {
-			final Weapon w = (Weapon) this.inventory.getEquipment(Slot.MAINHAND);
+		if( this.inventory.hasEquipment(EquipmentSlot.MAINHAND) ) {
+			final Weapon w = (Weapon) this.inventory.getEquipment(EquipmentSlot.MAINHAND);
 			return w.getFormula();
 		} else
-			return GlobalFormula.COMBAT_UNARMED.getFormula();
+			return GlobalFormula.DAMAGE_UNARMED.getFormula();
 	}
 
 	/**
@@ -308,10 +360,15 @@ public abstract class Hero extends Character {
 		this.timeSinceLastUpdate = time;
 		this.updateGoal();
 		if( this.isKO() ) {
-			this.move(Exploration.getInstance());
 			this.KOCounter++;
-			this.addLife(this.getMaxLife());
-			this.delayBeforeNewUpdate = DelayType.RESURRECTION;
+			if( this.KOCounter >= IdleRPG.KO_NUMBER_FOR_DEAD )
+				Logger.log("Le héros " + this.getName() + " est mort définitivement.");
+			else {
+				Logger.log(this, "Je ressucite...");
+				this.move(Exploration.getInstance());
+				this.addLife(this.getMaxLife());
+				this.delayBeforeNewUpdate = DelayType.RESURRECTION;
+			}
 		} else if( this.isFighting() ) {
 			this.delayBeforeNewUpdate = DelayType.FIGHTING;
 			this.fight.doTurn();
@@ -325,6 +382,14 @@ public abstract class Hero extends Character {
 			this.delayBeforeNewUpdate = DelayType.SHOP_BUYING;
 			this.doShop();
 		}
+	}
+
+	public int getKOCounter() {
+		return this.KOCounter;
+	}
+
+	public boolean isDead() {
+		return this.KOCounter >= IdleRPG.KO_NUMBER_FOR_DEAD;
 	}
 
 	/**

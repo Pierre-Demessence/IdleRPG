@@ -1,14 +1,9 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:21
- */
 package item;
 
 import java.util.Comparator;
 
-import database.items.Type;
+import database.items.ItemType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Item.
  */
@@ -35,6 +30,8 @@ public abstract class Item implements Comparable<Item> {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
+		if( obj == null || ! ( obj instanceof Item ) )
+			return false;
 		final Item item = (Item) obj;
 		final boolean res = this.getName().equals(item.getName());
 		return res;
@@ -45,14 +42,18 @@ public abstract class Item implements Comparable<Item> {
 	 * 
 	 * @return the name
 	 */
-	public abstract String getName();
+	public String getName() {
+		return this.getBaseName();
+	}
+
+	protected abstract String getBaseName();
 
 	/**
 	 * Gets the type.
 	 * 
 	 * @return the type
 	 */
-	public abstract Type getType();
+	public abstract ItemType getType();
 
 	/**
 	 * Gets the value.

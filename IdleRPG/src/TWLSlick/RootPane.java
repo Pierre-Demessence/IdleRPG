@@ -1,14 +1,9 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:20
- */
 package TWLSlick;
 
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Widget;
 
-// TODO: Auto-generated Javadoc
 /**
  * RootPane for all game states.
  * It forwards input events which where not handled by the UI to the game state.

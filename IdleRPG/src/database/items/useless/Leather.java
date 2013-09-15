@@ -5,7 +5,7 @@
 package database.items.useless;
 
 import item.Item;
-import database.items.Type;
+import database.items.ItemType;
 
 /**
  * The Class Leather.
@@ -16,7 +16,7 @@ public class Leather extends Item {
 	 * @see item.Item#getName()
 	 */
 	@Override
-	public String getName() {
+	public String getBaseName() {
 		return "Leather";
 	}
 
@@ -24,8 +24,8 @@ public class Leather extends Item {
 	 * @see item.Item#getType()
 	 */
 	@Override
-	public Type getType() {
-		return Type.USELESS;
+	public ItemType getType() {
+		return ItemType.USELESS;
 	}
 
 	/* (non-Javadoc)

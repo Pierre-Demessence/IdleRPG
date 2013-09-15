@@ -31,7 +31,7 @@ public class SmallLifePotion extends Consumable {
 	 * @see item.Item#getName()
 	 */
 	@Override
-	public String getName() {
+	public String getBaseName() {
 		return "Small Life Potion";
 	}
 

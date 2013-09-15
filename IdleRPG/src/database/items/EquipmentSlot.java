@@ -7,7 +7,7 @@ package database.items;
 /**
  * The Enum Slot.
  */
-public enum Slot {
+public enum EquipmentSlot {
 
 	/** The chest. */
 	CHEST,

@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:19
- */
 package util;
 
 import java.util.ArrayList;
@@ -13,7 +9,6 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import character.Hero;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class NameGenerator.
  */

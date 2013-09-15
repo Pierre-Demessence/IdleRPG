@@ -10,7 +10,6 @@ import org.newdawn.slick.util.InputAdapter;
 
 import de.matthiasmann.twl.GUI;
 
-// TODO: Auto-generated Javadoc
 /**
  * Forwards input events from Slick to TWL.
  * 

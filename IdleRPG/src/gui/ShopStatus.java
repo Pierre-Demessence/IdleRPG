@@ -13,7 +13,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import TWLSlick.RootPane;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShopStatus.
  */

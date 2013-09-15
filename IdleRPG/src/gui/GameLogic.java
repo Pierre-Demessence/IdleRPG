@@ -1,7 +1,3 @@
-/*
- * Author : Pierre
- * Last Update : 12 sept. 2013 - 04:07:18
- */
 package gui;
 
 import gui.widget.BottomMenu;
@@ -16,7 +12,6 @@ import TWLSlick.BasicTWLGameState;
 import TWLSlick.RootPane;
 import character.Hero;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class GameLogic.
  */
@@ -41,18 +36,27 @@ public abstract class GameLogic extends BasicTWLGameState {
 	 */
 	@Override
 	public void update(final GameContainer container, final StateBasedGame game, final int delta) throws SlickException {
+		// On vérifie la pause
 		if( container.getInput().isKeyPressed(Input.KEY_SPACE) )
 			this.game.togglePaused();
 		if( this.game.isPaused() )
 			return;
 
+		// On met à jour les ticks.
 		this.game.setGameTick( ( this.game.getGameTick() + (long) ( ( 1.0f / 60 ) * 1000 ) )); // 60 est le nombre de FPS recherché.
 
+		// On met à jour les héros.
 		for( final Hero h : this.game.getHeroList() )
-			if( ( this.game.getGameTick() - h.getTimeSinceLastUpdate() ) > h.getDelayBeforeNewUpdate() )
+			if( !h.isDead() && ( this.game.getGameTick() - h.getTimeSinceLastUpdate() ) > h.getDelayBeforeNewUpdate() )
 				h.update(this.game.getGameTick());
+
+		// On met à jour le magasin.
 		if( ( this.game.getGameTick() - this.game.getShop().getTimeSinceLastRestock() ) > this.game.getShop().getDelayBeforeRestock() )
 			this.game.getShop().restock(this.game.getGameTick());
+
+		// On vérifie qu'il y a le bon nombre de héros vivant minimum.
+		while( this.game.countAliveHeroes() < IdleRPG.MIN_ALIVE_HEROES )
+			this.game.addHero();
 	}
 
 	/* (non-Javadoc)

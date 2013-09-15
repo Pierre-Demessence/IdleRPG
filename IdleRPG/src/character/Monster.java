@@ -11,8 +11,8 @@ import java.util.EnumMap;
 
 import util.Formula;
 import database.GlobalFormula;
+import database.characters.Attribute;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Monster.
  */
@@ -86,7 +86,7 @@ public abstract class Monster extends Character implements Cloneable {
 	 */
 	@Override
 	public Formula getDammagesFormula() {
-		return GlobalFormula.COMBAT_UNARMED.getFormula();
+		return GlobalFormula.DAMAGE_UNARMED.getFormula();
 	}
 
 	/**

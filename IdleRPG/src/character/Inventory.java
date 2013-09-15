@@ -4,6 +4,7 @@
  */
 package character;
 
+import item.Armor;
 import item.Consumable;
 import item.Equipment;
 import item.Item;
@@ -20,27 +21,26 @@ import location.Shop;
 import org.apache.commons.collections4.bag.HashBag;
 
 import util.Logger;
-import database.items.Slot;
+import database.items.EquipmentSlot;
 
-// TODO: Auto-generated Javadoc
 /**
  * Manage all the objects of an hero : the inventory, the equipments and the gold.
  */
 public class Inventory {
 
 	/** The equipment. */
-	private final EnumMap<Slot, Equipment>	equipment;
+	private final EnumMap<EquipmentSlot, Equipment>	equipment;
 	/** The gold. */
-	private int								gold;
+	private int										gold;
 	/** The hero. */
-	private final Hero						hero;
+	private final Hero								hero;
 	/** The inventory. 15 Item slots. No more than 99 of the same item. */
-	private final HashBag<Item>				inventory;
+	private final HashBag<Item>						inventory;
 	/** The marked to sell. */
-	private final HashSet<Item>				markedForSale;
+	private final HashSet<Item>						markedForSale;
 
 	/** The shop checked. */
-	private boolean							shopChecked;
+	private boolean									shopChecked;
 
 	/**
 	 * Instantiates a new inventory.
@@ -51,7 +51,7 @@ public class Inventory {
 	public Inventory(final Hero hero) {
 		this.hero = hero;
 		this.inventory = new HashBag<>();
-		this.equipment = new EnumMap<>(Slot.class);
+		this.equipment = new EnumMap<>(EquipmentSlot.class);
 		this.markedForSale = new HashSet<>();
 		this.gold = 100;
 	}
@@ -111,10 +111,10 @@ public class Inventory {
 			this.markedForSale.add(item);
 		// If the item can and should be equiped, equip it.
 		else if( this.testEquip(item) ) {
-			this.equip((Equipment) item);
+			this.equip((Armor) item);
 			if( n > 1 )
 				this.markedForSale.add(item);
-		} else if( item instanceof Equipment )
+		} else if( item instanceof Armor )
 			this.markedForSale.add(item);
 	}
 
@@ -133,16 +133,18 @@ public class Inventory {
 			consumables.addAll(shop.getConsumables());
 			for( final Consumable c : consumables )
 				if( c.getValue() <= this.getGold() ) {
-					shop.sell(this.hero, c, (int) Math.min(Math.min(this.getGold() / c.getValue(), Math.ceil((float) lifeGainNeed / c.getLifeGain())), shop.getCount(c)));
+					int maxCanBuy = this.getGold() / c.getValue();
+					double maxNeeded = Math.ceil((float) lifeGainNeed / c.getLifeGain());
+					shop.sell(this.hero, c, (int) Math.min(Math.min(maxCanBuy, maxNeeded), shop.getCount(c)));
 					return;
 				}
 			this.setShopChecked(true, true);
 			Logger.log(this.hero, "J'ai besoin de plus de consommables, mais je n'ai pas assez d'argent.");
 		} else {
 
-			final TreeSet<Equipment> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
+			final TreeSet<Armor> equipments = new TreeSet<>(Collections.reverseOrder(Item.VALUE_ORDER));
 			equipments.addAll(shop.getEquipments(null, this.hero.getLevel()));
-			for( final Equipment e : equipments )
+			for( final Armor e : equipments )
 				if( ( e.getValue() <= this.getGold() ) && this.testEquip(e) ) {
 					shop.sell(this.hero, e, 1);
 					return;
@@ -160,8 +162,9 @@ public class Inventory {
 	 */
 	public int getArmor() {
 		int armor = 0;
-		for( final Entry<Slot, Equipment> e : this.equipment.entrySet() )
-			armor += e.getValue().getArmorBonus();
+		for( final Entry<EquipmentSlot, Equipment> e : this.equipment.entrySet() )
+			if( e.getValue() instanceof Armor )
+				armor += ( (Armor) e.getValue() ).getArmorBonus();
 		return armor;
 	}
 
@@ -170,7 +173,7 @@ public class Inventory {
 	 * 
 	 * @return the equipment
 	 */
-	public EnumMap<Slot, Equipment> getEquipment() {
+	public EnumMap<EquipmentSlot, Equipment> getEquipment() {
 		return this.equipment;
 	}
 
@@ -181,7 +184,7 @@ public class Inventory {
 	 *            the slot
 	 * @return the equipment
 	 */
-	public Equipment getEquipment(final Slot slot) {
+	public Equipment getEquipment(final EquipmentSlot slot) {
 		return this.equipment.get(slot);
 	}
 
@@ -239,7 +242,7 @@ public class Inventory {
 	 *            the slot
 	 * @return true, if successful
 	 */
-	public boolean hasEquipment(final Slot slot) {
+	public boolean hasEquipment(final EquipmentSlot slot) {
 		return this.equipment.containsKey(slot);
 	}
 
@@ -312,8 +315,8 @@ public class Inventory {
 	 * @param equipment
 	 *            the equipment
 	 */
-	private void equip(final Equipment equipment) {
-		final Slot slot = equipment.getSlot();
+	private void equip(final Armor equipment) {
+		final EquipmentSlot slot = equipment.getSlot();
 		if( this.equipment.containsKey(slot) ) {
 			Logger.log(this.hero, "Je déséquipe " + this.equipment.get(slot).getName() + ".");
 			this.addItem(this.equipment.get(slot), 1);
@@ -345,9 +348,9 @@ public class Inventory {
 	 */
 	private boolean testEquip(final Item item) {
 		// If it's not an equipment, return false.
-		if( ! ( item instanceof Equipment ) )
+		if( ! ( item instanceof Armor ) )
 			return false;
-		final Equipment equipment = (Equipment) item;
+		final Armor equipment = (Armor) item;
 
 		// If the class cannot equip this type of item, return false.
 		if( !this.hero.getAllowedItemTypes().contains(equipment.getType()) )
@@ -361,7 +364,7 @@ public class Inventory {
 		// Beyond that, the item CAN be equiped.
 
 		// If the slot where the item goes is empty, equip it.
-		final Slot slot = equipment.getSlot();
+		final EquipmentSlot slot = equipment.getSlot();
 		if( !this.equipment.containsKey(slot) )
 			return true;
 
