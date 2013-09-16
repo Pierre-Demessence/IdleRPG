@@ -9,6 +9,11 @@ package fr.idlerpg.location;
  */
 public interface Location {
 
+	/**
+	 * Gets the name.
+	 * 
+	 * @return the name
+	 */
 	public abstract String getName();
 
 }

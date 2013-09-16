@@ -22,63 +22,104 @@ import fr.idlerpg.item.ArmorModifier;
 import fr.idlerpg.item.EquipmentModifier;
 import fr.idlerpg.item.WeaponModifier;
 
+/**
+ * A factory for creating Modifier objects.
+ */
 public class ModifierFactory {
 
+	/**
+	 * The Enum ModifierSlot.
+	 */
 	public enum ModifierSlot {
+
+		/** The armor modifier. */
 		ARMOR_MODIFIER,
+
+		/** The weapon modifier. */
 		WEAPON_MODIFIER;
 	}
 
+	/** The modifiers. */
 	private static HashSet<EquipmentModifier>	modifiers;
 
-	private static void init() {
-		modifiers = new HashSet<>();
-		modifiers.add(new Sharp());
-		modifiers.add(new Dangerous());
-		modifiers.add(new Deadly());
+	/**
+	 * Gets the modifier.
+	 * 
+	 * @param slot
+	 *            the slot
+	 * @param type
+	 *            the type
+	 * @return the modifier
+	 */
+	public static EquipmentModifier getModifier(final ModifierSlot slot, final ModifierQuality type) {
+		if( ModifierFactory.modifiers == null )
+			ModifierFactory.init();
 
-		modifiers.add(new Shiny());
-		modifiers.add(new Precious());
-		modifiers.add(new Golden());
-
-		modifiers.add(new Padded());
-		modifiers.add(new Reinforced());
-		// modifiers.add(new Golden()); ??
-
-		modifiers.add(new Power());
-		modifiers.add(new Toughness());
-		modifiers.add(new Knowledge());
-		modifiers.add(new Cunning());
-		modifiers.add(new Charm());
-		modifiers.add(new Address());
-
-	}
-
-	private static HashSet<EquipmentModifier> getModifiers(HashSet<EquipmentModifier> set, ModifierSlot slot) {
-		HashSet<EquipmentModifier> res = new HashSet<>();
-		for( EquipmentModifier em : set )
-			if( slot == null || ( slot == ModifierSlot.ARMOR_MODIFIER && ! ( em instanceof WeaponModifier ) ) || ( slot == ModifierSlot.WEAPON_MODIFIER && ! ( em instanceof ArmorModifier ) ) )
-				res.add(em);
-		return res;
-	}
-
-	private static HashSet<EquipmentModifier> getModifiers(HashSet<EquipmentModifier> set, ModifierQuality type) {
-		HashSet<EquipmentModifier> res = new HashSet<>();
-		for( EquipmentModifier em : set )
-			if( type == null || em.getModifierValue() == type )
-				res.add(em);
-		return res;
-	}
-
-	public static EquipmentModifier getModifier(ModifierSlot slot, ModifierQuality type) {
-		if( modifiers == null )
-			init();
-
-		HashSet<EquipmentModifier> set = getModifiers(modifiers, slot);
-		set = getModifiers(set, type);
-		Random r = new Random();
+		HashSet<EquipmentModifier> set = ModifierFactory.getModifiers(ModifierFactory.modifiers, slot);
+		set = ModifierFactory.getModifiers(set, type);
+		final Random r = new Random();
 		if( set.size() < 1 )
 			return null;
 		return (EquipmentModifier) set.toArray()[r.nextInt(set.size())];
+	}
+
+	/**
+	 * Gets the modifiers.
+	 * 
+	 * @param set
+	 *            the set
+	 * @param type
+	 *            the type
+	 * @return the modifiers
+	 */
+	private static HashSet<EquipmentModifier> getModifiers(final HashSet<EquipmentModifier> set, final ModifierQuality type) {
+		final HashSet<EquipmentModifier> res = new HashSet<>();
+		for( final EquipmentModifier em : set )
+			if( ( type == null ) || ( em.getModifierValue() == type ) )
+				res.add(em);
+		return res;
+	}
+
+	/**
+	 * Gets the modifiers.
+	 * 
+	 * @param set
+	 *            the set
+	 * @param slot
+	 *            the slot
+	 * @return the modifiers
+	 */
+	private static HashSet<EquipmentModifier> getModifiers(final HashSet<EquipmentModifier> set, final ModifierSlot slot) {
+		final HashSet<EquipmentModifier> res = new HashSet<>();
+		for( final EquipmentModifier em : set )
+			if( ( slot == null ) || ( ( slot == ModifierSlot.ARMOR_MODIFIER ) && ! ( em instanceof WeaponModifier ) ) || ( ( slot == ModifierSlot.WEAPON_MODIFIER ) && ! ( em instanceof ArmorModifier ) ) )
+				res.add(em);
+		return res;
+	}
+
+	/**
+	 * Inits the.
+	 */
+	private static void init() {
+		ModifierFactory.modifiers = new HashSet<>();
+		ModifierFactory.modifiers.add(new Sharp());
+		ModifierFactory.modifiers.add(new Dangerous());
+		ModifierFactory.modifiers.add(new Deadly());
+
+		ModifierFactory.modifiers.add(new Shiny());
+		ModifierFactory.modifiers.add(new Precious());
+		ModifierFactory.modifiers.add(new Golden());
+
+		ModifierFactory.modifiers.add(new Padded());
+		ModifierFactory.modifiers.add(new Reinforced());
+		// modifiers.add(new Golden()); ??
+
+		ModifierFactory.modifiers.add(new Power());
+		ModifierFactory.modifiers.add(new Toughness());
+		ModifierFactory.modifiers.add(new Knowledge());
+		ModifierFactory.modifiers.add(new Cunning());
+		ModifierFactory.modifiers.add(new Charm());
+		ModifierFactory.modifiers.add(new Address());
+
 	}
 }

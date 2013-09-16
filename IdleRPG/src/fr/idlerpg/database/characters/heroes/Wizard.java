@@ -9,18 +9,49 @@ import fr.idlerpg.database.characters.AttributePriority;
 import fr.idlerpg.database.factories.ItemFactory;
 import fr.idlerpg.database.items.ItemType;
 
+/**
+ * The Class Wizard.
+ */
 public class Wizard extends Hero {
 
-	public Wizard(String name) {
+	/**
+	 * Instantiates a new wizard.
+	 * 
+	 * @param name
+	 *            the name
+	 */
+	public Wizard(final String name) {
 		super(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getAllowedItemTypes()
+	 */
 	@Override
-	protected void init() {
-		super.init();
-		this.addItem(ItemFactory.getWeapon("NoviceStaff"), 1);
+	protected ArrayList<ItemType> getAllowedItemTypes() {
+		final ArrayList<ItemType> types = super.getAllowedItemTypes();
+		types.add(ItemType.STAFF);
+		return types;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getAttributePriority()
+	 */
+	@Override
+	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
+		final EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
+		res.put(Attribute.INTELLIGENCE, AttributePriority.HIGH);
+		res.put(Attribute.WISDOM, AttributePriority.HIGH);
+		res.put(Attribute.DEXTERITY, AttributePriority.NORMAL);
+		res.put(Attribute.CONSTITUTION, AttributePriority.LOW);
+		res.put(Attribute.STRENGH, AttributePriority.LOW);
+		res.put(Attribute.CHARISMA, AttributePriority.LOW);
+		return res;
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getBaseAttributes()
+	 */
 	@Override
 	protected EnumMap<Attribute, Integer> getBaseAttributes() {
 		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
@@ -33,24 +64,13 @@ public class Wizard extends Hero {
 		return attributes;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#init()
+	 */
 	@Override
-	protected ArrayList<ItemType> getAllowedItemTypes() {
-		final ArrayList<ItemType> types = super.getAllowedItemTypes();
-		types.add(ItemType.STAFF);
-		types.add(ItemType.LIGHT_ARMOR);
-		return types;
-	}
-
-	@Override
-	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
-		EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
-		res.put(Attribute.INTELLIGENCE, AttributePriority.HIGH);
-		res.put(Attribute.WISDOM, AttributePriority.HIGH);
-		res.put(Attribute.DEXTERITY, AttributePriority.NORMAL);
-		res.put(Attribute.CONSTITUTION, AttributePriority.LOW);
-		res.put(Attribute.STRENGH, AttributePriority.LOW);
-		res.put(Attribute.CHARISMA, AttributePriority.LOW);
-		return res;
+	protected void init() {
+		super.init();
+		this.addItem(ItemFactory.getWeapon("NoviceStaff"), 1);
 	}
 
 }

@@ -4,13 +4,13 @@
  */
 package fr.idlerpg.gui;
 
-import fr.idlerpg.TWLSlick.RootPane;
-import fr.idlerpg.gui.widget.ShopInventory;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+
+import fr.idlerpg.TWLSlick.RootPane;
+import fr.idlerpg.gui.widget.ShopInventory;
 
 /**
  * The Class ShopStatus.

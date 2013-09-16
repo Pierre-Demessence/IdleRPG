@@ -67,7 +67,7 @@ public class ShopInventory extends ResizableFrame {
 		final Shop shop = Shop.getInstance();
 		String text = "";
 		for( final Item i : shop.getItems() )
-			text += i.getName() + " : " + shop.getCount(i) + "\n";
+			text += shop.getCount(i) + " " + i.getName() + " ; " + i.getValue() + "po\n";
 		this.tam.setText(text);
 
 		final float value = ( IdleRPG.getInstance().getGameTick() - (float) shop.getTimeSinceLastRestock() ) / shop.getDelayBeforeRestock();

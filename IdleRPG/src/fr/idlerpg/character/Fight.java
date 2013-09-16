@@ -1,5 +1,6 @@
 package fr.idlerpg.character;
 
+import fr.idlerpg.item.Item;
 import fr.idlerpg.item.Loot;
 import fr.idlerpg.util.Logger;
 
@@ -133,8 +134,9 @@ public class Fight {
 		if( this.monster.getLoots() != null )
 			for( final Loot l : this.monster.getLoots() )
 				if( l.test() ) {
-					Logger.log(this.hero, "Je trouve " + l.getQuantity() + " " + l.getItem().getName() + " !");
-					this.hero.addItem(l.getItem(), l.getQuantity());
+					Item item = l.getItem();
+					Logger.log(this.hero, "Je trouve " + l.getQuantity() + " " + item.getName() + " !");
+					this.hero.addItem(item, l.getQuantity());
 				}
 		this.hero.decreaseFightBeforeGoToShop();
 	}

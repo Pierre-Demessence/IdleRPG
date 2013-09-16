@@ -28,6 +28,21 @@ public class Formula {
 	private static boolean			init;
 
 	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
+	public static void main(final String[] args) {
+		final Warrior hero = new Warrior("toto");
+		hero.addAttribute(Attribute.STRENGH, 0);
+		hero.addAttribute(Attribute.CONSTITUTION, 0);
+		final Formula formula = new Formula("(STR * 2 + CON/2) / (DICE(2, CON) + DICE(1, STR)) + DICE(2, CON) + DICE(1, STR)");
+		System.out.println("Min: " + formula.calculateMin(hero));
+		System.out.println("Max: " + formula.calculateMax(hero));
+	}
+
+	/**
 	 * Inits the formula class.
 	 */
 	private static void init() {
@@ -131,14 +146,5 @@ public class Formula {
 	 */
 	private int calculate() {
 		return (int) Math.round(this.formula.calculate());
-	}
-
-	public static void main(String[] args) {
-		Warrior hero = new Warrior("toto");
-		hero.addAttribute(Attribute.STRENGH, 0);
-		hero.addAttribute(Attribute.CONSTITUTION, 0);
-		Formula formula = new Formula("(STR * 2 + CON/2) / (DICE(2, CON) + DICE(1, STR)) + DICE(2, CON) + DICE(1, STR)");
-		System.out.println("Min: " + formula.calculateMin(hero));
-		System.out.println("Max: " + formula.calculateMax(hero));
 	}
 }

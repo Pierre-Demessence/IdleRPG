@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import fr.idlerpg.database.dungeons.Cave;
+import fr.idlerpg.database.dungeons.Crypt;
 
 /**
  * The Class Exploration.
@@ -19,14 +20,9 @@ public class Exploration implements Location {
 	 * @return single instance of Exploration
 	 */
 	public static final Exploration getInstance() {
-		if( INSTANCE == null )
+		if( Exploration.INSTANCE == null )
 			Exploration.init();
 		return Exploration.INSTANCE;
-	}
-
-	@Override
-	public String getName() {
-		return "World";
 	}
 
 	/**
@@ -35,6 +31,7 @@ public class Exploration implements Location {
 	private static final void init() {
 		Exploration.INSTANCE = new Exploration();
 		Exploration.INSTANCE.dungeons.add(new Cave());
+		Exploration.INSTANCE.dungeons.add(new Crypt());
 
 	}
 
@@ -57,5 +54,13 @@ public class Exploration implements Location {
 		final Random r = new Random();
 		final int i = r.nextInt(this.dungeons.size());
 		return this.dungeons.get(i);
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.location.Location#getName()
+	 */
+	@Override
+	public String getName() {
+		return "World";
 	}
 }

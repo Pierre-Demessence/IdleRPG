@@ -23,8 +23,11 @@ import fr.idlerpg.util.Logger;
  */
 public class Shop implements Location {
 
+	/** The delay before restock. */
+	private final static long	DELAY_BEFORE_RESTOCK	= 60 * 1000;
+
 	/** The instance. */
-	private static Shop	INSTANCE;
+	private static Shop			INSTANCE;
 
 	/**
 	 * Gets the single instance of Shop.
@@ -32,14 +35,9 @@ public class Shop implements Location {
 	 * @return single instance of Shop
 	 */
 	public static final Shop getInstance() {
-		if( INSTANCE == null )
+		if( Shop.INSTANCE == null )
 			Shop.init();
 		return Shop.INSTANCE;
-	}
-
-	@Override
-	public String getName() {
-		return "Shop";
 	}
 
 	/**
@@ -48,9 +46,6 @@ public class Shop implements Location {
 	private static final void init() {
 		Shop.INSTANCE = new Shop();
 	}
-
-	/** The delay before restock. */
-	private final static long	DELAY_BEFORE_RESTOCK	= 60 * 1000;
 
 	/** The items. */
 	private final HashBag<Item>	items;
@@ -76,7 +71,7 @@ public class Shop implements Location {
 	 *            the n
 	 */
 	public void buy(final Hero hero, final Item i, final int n) {
-		final int totalValue = i.getValue() / 2 * n;
+		final int totalValue = ( i.getValue() / 2 ) * n;
 		hero.addGold(+totalValue);
 		Logger.log(hero, "Je vend " + n + " " + i.getName() + " pour un total de " + totalValue + "po.");
 		hero.removeItem(i, n);
@@ -146,6 +141,14 @@ public class Shop implements Location {
 		return this.items.uniqueSet();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.location.Location#getName()
+	 */
+	@Override
+	public String getName() {
+		return "Shop";
+	}
+
 	/**
 	 * Gets the time since last restock.
 	 * 
@@ -168,7 +171,7 @@ public class Shop implements Location {
 			this.items.add(new BigLifePotion(), 1);
 		}
 		this.timeSinceLastRestock = time;
-		int countAliveHeroes = IdleRPG.getInstance().countAliveHeroes();
+		final int countAliveHeroes = IdleRPG.getInstance().countAliveHeroes();
 		this.items.add(new SmallLifePotion(), countAliveHeroes * 2);
 	}
 

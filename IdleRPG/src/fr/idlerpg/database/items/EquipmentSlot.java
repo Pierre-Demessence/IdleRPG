@@ -31,5 +31,6 @@ public enum EquipmentSlot {
 	NECK,
 
 	/** The offhand. */
-	OFFHAND;
+	OFFHAND,
+	RING;
 }

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.idlerpg.character.Hero;
+import fr.idlerpg.database.factories.ItemFactory;
 import fr.idlerpg.database.items.ItemType;
 import fr.idlerpg.util.Logger;
 
@@ -61,6 +62,11 @@ public abstract class Consumable extends Item {
 																					return ( o1.getTotalGain() / o1.getValue() ) - ( o2.getTotalGain() / o2.getValue() );
 																				}
 																			};
+
+	@Override
+	public Object clone() {
+		return ItemFactory.getConsumable(this.getClass().getSimpleName());
+	}
 
 	/**
 	 * Consume.

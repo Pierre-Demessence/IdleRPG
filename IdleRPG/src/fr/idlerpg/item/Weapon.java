@@ -18,9 +18,54 @@ import fr.idlerpg.util.Formula;
  */
 public abstract class Weapon extends Equipment {
 
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
+	public static void main(final String[] args) {
+
+		for( int i = 0 ; i < 15 ; i++ ) {
+			final Weapon w = ItemFactory.getWeapon("ShortSword", true);
+			System.out.println(i + ") " + w.getName());
+		}
+
+		final EnumMap<ModifierQuality, Integer> table = new EnumMap<>(ModifierQuality.class);
+		final int N = 3000000;
+		for( int i = 0 ; i < N ; i++ ) {
+			final ModifierQuality mv = ModifierQuality.getRandomModifierQuality();
+			if( mv != null )
+				table.put(mv, ( table.get(mv) != null ? table.get(mv) : 0 ) + 1);
+		}
+
+		int total = 0;
+		for( final java.util.Map.Entry<ModifierQuality, Integer> e : table.entrySet() ) {
+			System.out.println(e.getKey().name() + " : " + e.getValue() + " / " + N + " (" + ( ( (float) e.getValue() / N ) * 100 ) + "%)");
+			total += e.getValue();
+		}
+		System.out.println("----- ----- ----- ----- -----");
+		System.out.println("Total : " + total + " / " + N + "(" + ( ( (float) total / N ) * 100 ) + "%)");
+	}
+
 	@Override
-	protected ModifierSlot getModifierSlot() {
-		return ModifierSlot.WEAPON_MODIFIER;
+	public Object clone() {
+		return this.clone(false);
+	}
+
+	@Override
+	public Weapon clone(boolean modifiers) {
+		return ItemFactory.getWeapon(this.getClass().getSimpleName(), modifiers);
+	}
+
+	/**
+	 * Adds the modifier.
+	 * 
+	 * @param em
+	 *            the em
+	 */
+	public void addModifier(final WeaponModifier em) {
+		super.addModifier(em);
 	}
 
 	/**
@@ -32,10 +77,6 @@ public abstract class Weapon extends Equipment {
 	 */
 	public int getDammages(final Character c) {
 		return this.getFormula().calculate(c) + this.getDammagesBonus();
-	}
-
-	public void addModifier(WeaponModifier em) {
-		super.addModifier(em);
 	}
 
 	/**
@@ -57,8 +98,8 @@ public abstract class Weapon extends Equipment {
 	 * @see item.Equipment#getValue()
 	 */
 	@Override
-	public int getValue() {
-		return super.getValue() + 10 + 50 * this.getDammagesBonus();
+	public int getCalculatedValue() {
+		return super.getCalculatedValue() + 50 + 100 * this.getDammagesBonus();
 	}
 
 	/**
@@ -68,37 +109,26 @@ public abstract class Weapon extends Equipment {
 	 */
 	private int getDammagesBonus() {
 		int d = this.getBaseDammagesBonus();
-		for( EquipmentModifier wm : this.modifiers )
+		for( final EquipmentModifier wm : this.modifiers )
 			if( wm instanceof WeaponModifier )
 				d += ( (WeaponModifier) wm ).getDamagesBonus();
 		return d;
 	}
 
+	/**
+	 * Gets the base dammages bonus.
+	 * 
+	 * @return the base dammages bonus
+	 */
 	protected int getBaseDammagesBonus() {
 		return 0;
 	}
 
-	public static void main(String[] args) {
-
-		for( int i = 0 ; i < 15 ; i++ ) {
-			Weapon w = ItemFactory.getWeapon("ShortSword", true);
-			System.out.println(i + ") " + w.getName());
-		}
-
-		EnumMap<ModifierQuality, Integer> table = new EnumMap<>(ModifierQuality.class);
-		int N = 3000000;
-		for( int i = 0 ; i < N ; i++ ) {
-			ModifierQuality mv = ModifierQuality.getRandomModifierQuality();
-			if( mv != null )
-				table.put(mv, ( table.get(mv) != null ? table.get(mv) : 0 ) + 1);
-		}
-
-		int total = 0;
-		for( java.util.Map.Entry<ModifierQuality, Integer> e : table.entrySet() ) {
-			System.out.println(e.getKey().name() + " : " + e.getValue() + " / " + N + " (" + (float) e.getValue() / N * 100 + "%)");
-			total += e.getValue();
-		}
-		System.out.println("----- ----- ----- ----- -----");
-		System.out.println("Total : " + total + " / " + N + "(" + (float) total / N * 100 + "%)");
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.item.Equipment#getModifierSlot()
+	 */
+	@Override
+	protected ModifierSlot getModifierSlot() {
+		return ModifierSlot.WEAPON_MODIFIER;
 	}
 }

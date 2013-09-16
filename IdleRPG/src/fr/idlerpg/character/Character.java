@@ -85,20 +85,13 @@ public abstract class Character {
 	 */
 	public void attack(final Character c, final int dammages) {
 		if( this.touch(c) ) {
-			if( this instanceof Hero && ( (Hero) this ).hasEquipment(EquipmentSlot.MAINHAND) )
+			if( ( this instanceof Hero ) && ( (Hero) this ).hasEquipment(EquipmentSlot.MAINHAND) )
 				Logger.log(this, "J'attaque " + c.getName() + " avec " + ( (Hero) this ).getEquipment(EquipmentSlot.MAINHAND).getName() + " et fait " + dammages + " dégâts.");
 			else
 				Logger.log(this, "J'attaque " + c.getName() + " et fait " + dammages + " dégâts.");
 			c.defend(dammages);
 		} else
 			Logger.log(this, "J'attaque " + c.getName() + " mais l'attaque échoue.");
-	}
-
-	private boolean touch(Character c) {
-		int x = GlobalFormula.ACCURACY.getFormula().calculate(this) - GlobalFormula.DODGE.getFormula().calculate(this);
-		float y = (float) ( 1 / ( 1 + Math.exp(-x) ) );
-		Random r = new Random();
-		return r.nextFloat() <= y;
 	}
 
 	/**
@@ -127,32 +120,12 @@ public abstract class Character {
 	}
 
 	/**
-	 * Defend some dammages taken.
-	 * 
-	 * @param dammages
-	 *            the dammages taken
-	 */
-	private void defend(final int dammages) {
-		final int finaldammages = dammages - this.getArmor();
-		Logger.log(this, "Je reçois " + finaldammages + "[+" + this.getArmor() + "].");
-		Logger.log(this, "Ma vie passe de " + this.getLife() + " à " + Math.max(0, this.getLife() - finaldammages) + ".");
-		this.addLife(-finaldammages);
-	}
-
-	/**
 	 * Do fight. Must be implemented to do the rights actions per turn properly.
 	 * 
 	 * @param opponent
 	 *            the opponent
 	 */
 	public abstract void doFight(Character opponent);
-
-	/**
-	 * Gets the armor. Dammages taken will be reduced by the armor.
-	 * 
-	 * @return the armor
-	 */
-	protected abstract int getArmor();
 
 	/**
 	 * Gets the attribute.
@@ -164,20 +137,6 @@ public abstract class Character {
 	public int getAttribute(final Attribute attribute) {
 		return this.getBaseAttributes().get(attribute);
 	}
-
-	/**
-	 * Gets the base attributes.
-	 * 
-	 * @return the base attributes
-	 */
-	protected abstract EnumMap<Attribute, Integer> getBaseAttributes();
-
-	/**
-	 * Gets the dammages formula.
-	 * 
-	 * @return the dammages formula
-	 */
-	protected abstract Formula getDammagesFormula();
 
 	/**
 	 * Gets the level.
@@ -210,7 +169,7 @@ public abstract class Character {
 	 * @return the max life
 	 */
 	public int getMaxLife() {
-		return GlobalFormula.LIFE_MAX.getFormula().calculate(this);
+		return GlobalFormula.LIFE_MAX.getFormula().calculate(this) + this.getLevel() * 5;
 	}
 
 	/**
@@ -219,7 +178,7 @@ public abstract class Character {
 	 * @return the max mana
 	 */
 	public int getMaxMana() {
-		return GlobalFormula.MANA_MAX.getFormula().calculate(this);
+		return GlobalFormula.MANA_MAX.getFormula().calculate(this) + this.getLevel() * 5;
 	}
 
 	/**
@@ -239,6 +198,54 @@ public abstract class Character {
 	public boolean isKO() {
 		return this.life <= 0;
 	}
+
+	/**
+	 * Defend some dammages taken.
+	 * 
+	 * @param dammages
+	 *            the dammages taken
+	 */
+	private void defend(final int dammages) {
+		final int finaldammages = dammages - this.getArmor();
+		Logger.log(this, "Je reçois " + finaldammages + "[+" + this.getArmor() + "].");
+		Logger.log(this, "Ma vie passe de " + this.getLife() + " à " + Math.max(0, this.getLife() - finaldammages) + ".");
+		this.addLife(-finaldammages);
+	}
+
+	/**
+	 * Touch.
+	 * 
+	 * @param c
+	 *            the c
+	 * @return true, if successful
+	 */
+	private boolean touch(final Character c) {
+		final int x = GlobalFormula.ACCURACY.getFormula().calculate(this) - GlobalFormula.DODGE.getFormula().calculate(this);
+		final float y = (float) ( 1 / ( 1 + Math.exp(-x) ) );
+		final Random r = new Random();
+		return r.nextFloat() <= y;
+	}
+
+	/**
+	 * Gets the armor. Dammages taken will be reduced by the armor.
+	 * 
+	 * @return the armor
+	 */
+	protected abstract int getArmor();
+
+	/**
+	 * Gets the base attributes.
+	 * 
+	 * @return the base attributes
+	 */
+	protected abstract EnumMap<Attribute, Integer> getBaseAttributes();
+
+	/**
+	 * Gets the dammages formula.
+	 * 
+	 * @return the dammages formula
+	 */
+	protected abstract Formula getDammagesFormula();
 
 	/**
 	 * To call at the end of the object creation process.

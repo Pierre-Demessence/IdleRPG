@@ -7,7 +7,7 @@ import fr.idlerpg.database.items.ItemType;
 /**
  * The Class Item.
  */
-public abstract class Item implements Comparable<Item> {
+public abstract class Item implements Comparable<Item>, Cloneable {
 
 	/** The Constant VALUE_ORDER. */
 	public static final Comparator<Item>	VALUE_ORDER	= new Comparator<Item>() {
@@ -16,6 +16,9 @@ public abstract class Item implements Comparable<Item> {
 																return o1.getValue() - o2.getValue();
 															}
 														};
+
+	@Override
+	protected abstract Object clone();
 
 	/* (non-Javadoc)
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -30,7 +33,7 @@ public abstract class Item implements Comparable<Item> {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if( obj == null || ! ( obj instanceof Item ) )
+		if( ( obj == null ) || ! ( obj instanceof Item ) )
 			return false;
 		final Item item = (Item) obj;
 		final boolean res = this.getName().equals(item.getName());
@@ -45,8 +48,6 @@ public abstract class Item implements Comparable<Item> {
 	public String getName() {
 		return this.getBaseName();
 	}
-
-	protected abstract String getBaseName();
 
 	/**
 	 * Gets the type.
@@ -69,5 +70,12 @@ public abstract class Item implements Comparable<Item> {
 	public int hashCode() {
 		return this.getName().hashCode();
 	}
+
+	/**
+	 * Gets the base name.
+	 * 
+	 * @return the base name
+	 */
+	protected abstract String getBaseName();
 
 }

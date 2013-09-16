@@ -29,37 +29,38 @@ import fr.idlerpg.util.Logger;
  */
 public abstract class Hero extends Character {
 
+	/** The attributes leveling. */
+	private final EnumMap<Attribute, Integer>	attributesLeveling;
+
 	/** The delay before new update. */
-	private DelayType					delayBeforeNewUpdate;
+	private DelayType							delayBeforeNewUpdate;
 
 	/** The experience. */
-	private int							experience;
+	private int									experience;
 
 	/** The fight. */
-	private Fight						fight;
+	private Fight								fight;
 
 	/** The fight before go to shop. */
-	private int							fightBeforeGoToShop;
+	private int									fightBeforeGoToShop;
 
 	/** The goal. */
-	private Goal						goal;
+	private Goal								goal;
 
 	/** The inventory. */
-	private final Inventory				inventory;
+	private final Inventory						inventory;
 
 	/** The KO counter. */
-	private int							KOCounter;
+	private int									KOCounter;
 
 	/** The level. */
-	private int							level;
+	private int									level;
 
 	/** The location. */
-	private Location					location;
+	private Location							location;
 
 	/** The time since last update. */
-	private long						timeSinceLastUpdate	= Integer.MIN_VALUE;
-
-	private EnumMap<Attribute, Integer>	attributesLeveling;
+	private long								timeSinceLastUpdate	= Integer.MIN_VALUE;
 
 	/**
 	 * Instantiates a new hero.
@@ -78,62 +79,16 @@ public abstract class Hero extends Character {
 		this.init();
 	}
 
-	public void addAttribute(Attribute attribute, int n) {
+	/**
+	 * Adds the attribute.
+	 * 
+	 * @param attribute
+	 *            the attribute
+	 * @param n
+	 *            the n
+	 */
+	public void addAttribute(final Attribute attribute, final int n) {
 		this.attributesLeveling.put(attribute, this.attributesLeveling.get(attribute) + n);
-	}
-
-	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
-		EnumMap<Attribute, AttributePriority> res = new EnumMap<>(Attribute.class);
-		for( Attribute a : Attribute.values() )
-			res.put(a, AttributePriority.NORMAL);
-		return res;
-	}
-
-	private void levelUp() {
-		Logger.log(this, "Je gagne un niveau !");
-		this.level++;
-
-		int totalFactor = 0;
-		for( AttributePriority ap : this.getAttributePriority().values() )
-			totalFactor += ap.getFactor();
-
-		for( int i = 1 ; i <= 5 ; i++ ) {
-			float rFloat = new Random().nextFloat();
-			int curFactor = 0;
-			for( Attribute a : Attribute.values() ) {
-				curFactor += (float) this.getAttributePriority().get(a).getFactor();
-				if( rFloat <= (float) curFactor / totalFactor ) {
-					Logger.log(this, "Je gagne un point en " + a.name());
-					this.addAttribute(a, 1);
-					break;
-				}
-			}
-		}
-	}
-
-	public boolean hasEquipment(EquipmentSlot slot) {
-		return this.inventory.hasEquipment(slot);
-	}
-
-	public Equipment getEquipment(EquipmentSlot slot) {
-		return this.inventory.getEquipment(slot);
-	}
-
-	@Override
-	protected void init() {
-		super.init();
-		Logger.log(this, "Je viens d'arriver dans le monde !");
-		for( Attribute a : Attribute.values() )
-			this.attributesLeveling.put(a, 0);
-
-		this.addItem(ItemFactory.getArmor("Shirt"), 1);
-		this.addItem(ItemFactory.getArmor("Trousers"), 1);
-		this.addItem(ItemFactory.getArmor("Shoes"), 1);
-	}
-
-	public int getAttributeLeveling(Attribute a) {
-		Integer value = this.attributesLeveling.get(a);
-		return ( value == null ? 0 : value );
 	}
 
 	/**
@@ -145,7 +100,7 @@ public abstract class Hero extends Character {
 	public void addExperience(final int gain) {
 		this.experience += gain;
 		this.experience = Math.max(0, this.experience);
-		while( this.level < IdleRPG.LEVEL_CAP && this.experience >= IdleRPG.getExperienceNeed(this.level + 1) ) {
+		while( ( this.level < IdleRPG.LEVEL_CAP ) && ( this.experience >= IdleRPG.getExperienceNeed(this.level + 1) ) ) {
 			this.experience -= IdleRPG.getExperienceNeed(this.level + 1);
 			this.levelUp();
 		}
@@ -205,17 +160,6 @@ public abstract class Hero extends Character {
 			Logger.log(this, "Je fuis le combat !");
 			this.fight.flee();
 		}
-	};
-
-	/**
-	 * Gets the allowed item types.
-	 * 
-	 * @return the allowed item types
-	 */
-	protected ArrayList<ItemType> getAllowedItemTypes() {
-		final ArrayList<ItemType> types = new ArrayList<>();
-		types.add(ItemType.CONSUMMABLE);
-		return types;
 	}
 
 	/* (non-Javadoc)
@@ -240,13 +184,16 @@ public abstract class Hero extends Character {
 	}
 
 	/**
-	 * The total of all attributes points must be 10.
+	 * Gets the attribute leveling.
 	 * 
-	 * @return the base attributes
-	 * @see fr.idlerpg.character.Character#getBaseAttributes()
+	 * @param a
+	 *            the a
+	 * @return the attribute leveling
 	 */
-	@Override
-	protected abstract EnumMap<Attribute, Integer> getBaseAttributes();
+	public int getAttributeLeveling(final Attribute a) {
+		final Integer value = this.attributesLeveling.get(a);
+		return ( value == null ? 0 : value );
+	}
 
 	/**
 	 * Gets the class name.
@@ -278,6 +225,17 @@ public abstract class Hero extends Character {
 	 */
 	public long getDelayBeforeNewUpdate() {
 		return this.delayBeforeNewUpdate.getDelay();
+	};
+
+	/**
+	 * Gets the equipment.
+	 * 
+	 * @param slot
+	 *            the slot
+	 * @return the equipment
+	 */
+	public Equipment getEquipment(final EquipmentSlot slot) {
+		return this.inventory.getEquipment(slot);
 	}
 
 	/**
@@ -296,6 +254,15 @@ public abstract class Hero extends Character {
 	 */
 	public int getGold() {
 		return this.inventory.getGold();
+	}
+
+	/**
+	 * Gets the kO counter.
+	 * 
+	 * @return the kO counter
+	 */
+	public int getKOCounter() {
+		return this.KOCounter;
 	}
 
 	/* (non-Javadoc)
@@ -331,6 +298,26 @@ public abstract class Hero extends Character {
 	 */
 	public long getTimeSinceLastUpdate() {
 		return this.timeSinceLastUpdate;
+	}
+
+	/**
+	 * Checks for equipment.
+	 * 
+	 * @param slot
+	 *            the slot
+	 * @return true, if successful
+	 */
+	public boolean hasEquipment(final EquipmentSlot slot) {
+		return this.inventory.hasEquipment(slot);
+	}
+
+	/**
+	 * Checks if is dead.
+	 * 
+	 * @return true, if is dead
+	 */
+	public boolean isDead() {
+		return this.KOCounter >= IdleRPG.KO_NUMBER_FOR_DEAD;
 	}
 
 	/**
@@ -394,14 +381,6 @@ public abstract class Hero extends Character {
 			this.delayBeforeNewUpdate = DelayType.SHOP_BUYING;
 			this.doShop();
 		}
-	}
-
-	public int getKOCounter() {
-		return this.KOCounter;
-	}
-
-	public boolean isDead() {
-		return this.KOCounter >= IdleRPG.KO_NUMBER_FOR_DEAD;
 	}
 
 	/**
@@ -533,6 +512,32 @@ public abstract class Hero extends Character {
 	}
 
 	/**
+	 * Level up.
+	 */
+	private void levelUp() {
+		Logger.log(this, "Je gagne un niveau !");
+		this.level++;
+
+		int totalFactor = 0;
+		for( final AttributePriority ap : this.getAttributePriority().values() )
+			totalFactor += ap.getFactor();
+
+		for( int i = 1 ; i <= 5 ; i++ ) {
+			final float rFloat = new Random().nextFloat();
+			int curFactor = 0;
+			for( final Attribute a : Attribute.values() ) {
+				curFactor += (float) this.getAttributePriority().get(a).getFactor();
+				if( rFloat <= ( (float) curFactor / totalFactor ) ) {
+					Logger.log(this, "Je gagne un point en " + a.name());
+					this.addAttribute(a, 1);
+					break;
+				}
+			}
+		}
+		// TODO Verifier si les équipements du sac ne sont pas désormais équipables.
+	}
+
+	/**
 	 * Move.
 	 * 
 	 * @param location
@@ -613,5 +618,54 @@ public abstract class Hero extends Character {
 			this.goal = Goal.DUNGEON;
 		else
 			this.goal = Goal.DUNGEON;
+	}
+
+	/**
+	 * Gets the allowed item types.
+	 * 
+	 * @return the allowed item types
+	 */
+	protected ArrayList<ItemType> getAllowedItemTypes() {
+		final ArrayList<ItemType> types = new ArrayList<>();
+		types.add(ItemType.CONSUMMABLE);
+		types.add(ItemType.LIGHT_ARMOR);
+		types.add(ItemType.ACCESSORY);
+		return types;
+	}
+
+	/**
+	 * Gets the attribute priority.
+	 * 
+	 * @return the attribute priority
+	 */
+	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
+		final EnumMap<Attribute, AttributePriority> res = new EnumMap<>(Attribute.class);
+		for( final Attribute a : Attribute.values() )
+			res.put(a, AttributePriority.NORMAL);
+		return res;
+	}
+
+	/**
+	 * The total of all attributes points must be 10.
+	 * 
+	 * @return the base attributes
+	 * @see fr.idlerpg.character.Character#getBaseAttributes()
+	 */
+	@Override
+	protected abstract EnumMap<Attribute, Integer> getBaseAttributes();
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Character#init()
+	 */
+	@Override
+	protected void init() {
+		super.init();
+		Logger.log(this, "Je viens d'arriver dans le monde !");
+		for( final Attribute a : Attribute.values() )
+			this.attributesLeveling.put(a, 0);
+
+		this.addItem(ItemFactory.getArmor("Shirt"), 1);
+		this.addItem(ItemFactory.getArmor("Trousers"), 1);
+		this.addItem(ItemFactory.getArmor("Shoes"), 1);
 	}
 }

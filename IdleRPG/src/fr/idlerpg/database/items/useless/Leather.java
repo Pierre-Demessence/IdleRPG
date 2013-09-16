@@ -4,13 +4,13 @@
  */
 package fr.idlerpg.database.items.useless;
 
-import fr.idlerpg.database.items.ItemType;
-import fr.idlerpg.item.Item;
+import fr.idlerpg.item.Useless;
+
 
 /**
  * The Class Leather.
  */
-public class Leather extends Item {
+public class Leather extends Useless {
 
 	/* (non-Javadoc)
 	 * @see item.Item#getName()
@@ -18,14 +18,6 @@ public class Leather extends Item {
 	@Override
 	public String getBaseName() {
 		return "Leather";
-	}
-
-	/* (non-Javadoc)
-	 * @see item.Item#getType()
-	 */
-	@Override
-	public ItemType getType() {
-		return ItemType.USELESS;
 	}
 
 	/* (non-Javadoc)

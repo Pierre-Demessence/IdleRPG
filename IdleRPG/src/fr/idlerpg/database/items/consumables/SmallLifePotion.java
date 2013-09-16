@@ -12,6 +12,14 @@ import fr.idlerpg.item.Consumable;
 public class SmallLifePotion extends Consumable {
 
 	/* (non-Javadoc)
+	 * @see item.Item#getName()
+	 */
+	@Override
+	public String getBaseName() {
+		return "Small Life Potion";
+	}
+
+	/* (non-Javadoc)
 	 * @see item.Consumable#getLifeGain()
 	 */
 	@Override
@@ -25,14 +33,6 @@ public class SmallLifePotion extends Consumable {
 	@Override
 	public int getManaGain() {
 		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see item.Item#getName()
-	 */
-	@Override
-	public String getBaseName() {
-		return "Small Life Potion";
 	}
 
 }

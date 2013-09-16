@@ -4,10 +4,10 @@
  */
 package fr.idlerpg.gui.widget;
 
-import fr.idlerpg.gui.ScreenState;
-import fr.idlerpg.main.IdleRPG;
 import de.matthiasmann.twl.BoxLayout;
 import de.matthiasmann.twl.Button;
+import fr.idlerpg.gui.ScreenState;
+import fr.idlerpg.main.IdleRPG;
 
 /**
  * The Class BottomMenu.

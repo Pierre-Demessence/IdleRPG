@@ -1,6 +1,8 @@
 package fr.idlerpg.item;
 
-
+/**
+ * The Class ArmorModifier.
+ */
 public abstract class ArmorModifier extends EquipmentModifier {
 
 	/**

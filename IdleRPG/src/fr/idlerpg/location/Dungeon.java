@@ -10,11 +10,11 @@ import fr.idlerpg.character.Monster;
  */
 public abstract class Dungeon implements Location {
 
+	/** The name. */
+	private final String			name;
+
 	/** The monsters. */
 	protected ArrayList<Monster>	monsters	= new ArrayList<>();
-
-	/** The name. */
-	private String					name;
 
 	/**
 	 * Instantiates a new dungeon.
@@ -24,10 +24,6 @@ public abstract class Dungeon implements Location {
 	 */
 	public Dungeon(final String name) {
 		this.name = name;
-	}
-
-	public String getName() {
-		return this.name;
 	}
 
 	/**
@@ -51,6 +47,14 @@ public abstract class Dungeon implements Location {
 		final Random r = new Random();
 		final int i = r.nextInt(this.monsters.size());
 		return (Monster) this.monsters.get(i).clone();
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.location.Location#getName()
+	 */
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 }

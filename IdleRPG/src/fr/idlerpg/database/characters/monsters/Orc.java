@@ -9,6 +9,11 @@ import java.util.EnumMap;
 
 import fr.idlerpg.character.Monster;
 import fr.idlerpg.database.characters.Attribute;
+import fr.idlerpg.database.items.consumables.Fruit;
+import fr.idlerpg.database.items.equipments.armors.Breastplate;
+import fr.idlerpg.database.items.equipments.armors.Ring;
+import fr.idlerpg.database.items.equipments.weapons.ShortSword;
+import fr.idlerpg.database.items.useless.Bone;
 import fr.idlerpg.item.Loot;
 
 /**
@@ -21,7 +26,7 @@ public class Orc extends Monster {
 	 */
 	@Override
 	public int getBaseArmor() {
-		return 3;
+		return 5;
 	}
 
 	/* (non-Javadoc)
@@ -31,28 +36,12 @@ public class Orc extends Monster {
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
 		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
 		attributes.put(Attribute.CHARISMA, 1);
-		attributes.put(Attribute.CONSTITUTION, 5);
-		attributes.put(Attribute.DEXTERITY, 3);
+		attributes.put(Attribute.CONSTITUTION, 6);
+		attributes.put(Attribute.DEXTERITY, 4);
 		attributes.put(Attribute.INTELLIGENCE, 1);
-		attributes.put(Attribute.STRENGH, 4);
-		attributes.put(Attribute.WISDOM, 1);
+		attributes.put(Attribute.STRENGH, 6);
+		attributes.put(Attribute.WISDOM, 2);
 		return attributes;
-	}
-
-	/* (non-Javadoc)
-	 * @see character.Monster#getExperienceLoot()
-	 */
-	@Override
-	public int getExperienceLoot() {
-		return 20;
-	}
-
-	/* (non-Javadoc)
-	 * @see character.Monster#getGoldLoot()
-	 */
-	@Override
-	public int getGoldLoot() {
-		return 10;
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +49,7 @@ public class Orc extends Monster {
 	 */
 	@Override
 	public int getLevel() {
-		return 2;
+		return 3;
 	}
 
 	/* (non-Javadoc)
@@ -68,7 +57,13 @@ public class Orc extends Monster {
 	 */
 	@Override
 	public ArrayList<Loot> getLoots() {
-		return null;
+		ArrayList<Loot> loots = super.getLoots();
+		loots.add(new Loot(new Bone(), 0.15f, 1));
+		loots.add(new Loot(new ShortSword(), 0.1f, 1));
+		loots.add(new Loot(new Fruit(), 0.3f, 2));
+		loots.add(new Loot(new Breastplate(), 0.2f, 1));
+		loots.add(new Loot(new Ring(), 0.05f, 1));
+		return loots;
 	}
 
 	/* (non-Javadoc)

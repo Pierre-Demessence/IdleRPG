@@ -9,6 +9,9 @@ import java.util.EnumMap;
 
 import fr.idlerpg.character.Monster;
 import fr.idlerpg.database.characters.Attribute;
+import fr.idlerpg.database.items.consumables.Fruit;
+import fr.idlerpg.database.items.equipments.armors.Greaves;
+import fr.idlerpg.database.items.equipments.weapons.Knife;
 import fr.idlerpg.database.items.useless.Leather;
 import fr.idlerpg.item.Loot;
 
@@ -22,7 +25,7 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public int getBaseArmor() {
-		return 1;
+		return 2;
 	}
 
 	/* (non-Javadoc)
@@ -30,32 +33,14 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
-
 		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
 		attributes.put(Attribute.CHARISMA, 1);
-		attributes.put(Attribute.CONSTITUTION, 2);
-		attributes.put(Attribute.DEXTERITY, 1);
-		attributes.put(Attribute.INTELLIGENCE, 1);
+		attributes.put(Attribute.CONSTITUTION, 4);
+		attributes.put(Attribute.DEXTERITY, 4);
+		attributes.put(Attribute.INTELLIGENCE, 2);
 		attributes.put(Attribute.STRENGH, 3);
 		attributes.put(Attribute.WISDOM, 1);
 		return attributes;
-
-	}
-
-	/* (non-Javadoc)
-	 * @see character.Monster#getExperienceLoot()
-	 */
-	@Override
-	public int getExperienceLoot() {
-		return 100;
-	}
-
-	/* (non-Javadoc)
-	 * @see character.Monster#getGoldLoot()
-	 */
-	@Override
-	public int getGoldLoot() {
-		return 2;
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +48,7 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public int getLevel() {
-		return 1;
+		return 2;
 	}
 
 	/* (non-Javadoc)
@@ -71,8 +56,11 @@ public class Gobelin extends Monster {
 	 */
 	@Override
 	public ArrayList<Loot> getLoots() {
-		final ArrayList<Loot> loots = new ArrayList<>();
-		loots.add(new Loot(new Leather(), 0.5f, 1));
+		final ArrayList<Loot> loots = super.getLoots();
+		loots.add(new Loot(new Leather(), 0.4f, 1));
+		loots.add(new Loot(new Fruit(), 0.35f, 1));
+		loots.add(new Loot(new Knife(), 0.3f, 1));
+		loots.add(new Loot(new Greaves(), 0.1f, 1));
 		return loots;
 	}
 

@@ -1,16 +1,12 @@
 package fr.idlerpg.item;
 
+import fr.idlerpg.database.factories.ItemFactory;
 import fr.idlerpg.database.factories.ModifierFactory.ModifierSlot;
 
 /**
  * The Class Equipment.
  */
 public abstract class Armor extends Equipment {
-
-	@Override
-	protected ModifierSlot getModifierSlot() {
-		return ModifierSlot.ARMOR_MODIFIER;
-	}
 
 	/**
 	 * Gets the armor bonus.
@@ -19,23 +15,53 @@ public abstract class Armor extends Equipment {
 	 */
 	public int getArmorBonus() {
 		int a = this.getBaseArmorBonus();
-		for( EquipmentModifier am : this.modifiers )
+		for( final EquipmentModifier am : this.modifiers )
 			if( am instanceof ArmorModifier )
 				a += ( (ArmorModifier) am ).getArmorBonus();
 		return a;
 	}
 
-	protected abstract int getBaseArmorBonus();
-
 	@Override
-	public int getValue() {
-		int value = super.getValue();
-		value = this.getArmorBonus() * 50;
-		return value;
+	public Object clone() {
+		return this.clone(false);
 	}
 
-	protected void addModifier(ArmorModifier em) {
+	@Override
+	public Armor clone(boolean modifiers) {
+		return ItemFactory.getArmor(this.getClass().getSimpleName(), modifiers);
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.item.Equipment#getValue()
+	 */
+	@Override
+	public int getCalculatedValue() {
+		return super.getCalculatedValue() + this.getArmorBonus() * 100;
+	}
+
+	/**
+	 * Adds the modifier.
+	 * 
+	 * @param em
+	 *            the em
+	 */
+	protected void addModifier(final ArmorModifier em) {
 		super.addModifier(em);
+	}
+
+	/**
+	 * Gets the base armor bonus.
+	 * 
+	 * @return the base armor bonus
+	 */
+	protected abstract int getBaseArmorBonus();
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.item.Equipment#getModifierSlot()
+	 */
+	@Override
+	protected ModifierSlot getModifierSlot() {
+		return ModifierSlot.ARMOR_MODIFIER;
 	}
 
 }

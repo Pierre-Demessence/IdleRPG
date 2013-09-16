@@ -131,8 +131,8 @@ public class Inventory {
 			consumables.addAll(shop.getConsumables());
 			for( final Consumable c : consumables )
 				if( c.getValue() <= this.getGold() ) {
-					int maxCanBuy = this.getGold() / c.getValue();
-					double maxNeeded = Math.ceil((float) lifeGainNeed / c.getLifeGain());
+					final int maxCanBuy = this.getGold() / c.getValue();
+					final double maxNeeded = Math.ceil((float) lifeGainNeed / c.getLifeGain());
 					shop.sell(this.hero, c, (int) Math.min(Math.min(maxCanBuy, maxNeeded), shop.getCount(c)));
 					return;
 				}
@@ -259,7 +259,7 @@ public class Inventory {
 	 * @return true, if the inventory is full
 	 */
 	public boolean isFull() {
-		return this.inventory.uniqueSet().size() == 10;
+		return this.inventory.uniqueSet().size() == 5;
 	}
 
 	/**
@@ -350,6 +350,10 @@ public class Inventory {
 			return false;
 		final Equipment equipment = (Equipment) item;
 
+		// If the item has no bonuses, return false;
+		if( equipment.getCalculatedValue() == 0 )
+			return false;
+
 		// If the class cannot equip this type of item, return false.
 		if( !this.hero.getAllowedItemTypes().contains(equipment.getType()) )
 			return false;
@@ -368,7 +372,7 @@ public class Inventory {
 
 		// Beyond that, there is already an item in the corresponding slot.
 		// Check if the item is better than the already equiped item.
-		if( Item.VALUE_ORDER.compare(item, this.equipment.get(slot)) > 0 )
+		if( Equipment.CALCULATED_VALUE_ORDER.compare(equipment, this.equipment.get(slot)) > 0 )
 			return true;
 
 		return false;

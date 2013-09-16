@@ -9,18 +9,36 @@ import fr.idlerpg.database.characters.AttributePriority;
 import fr.idlerpg.database.factories.ItemFactory;
 import fr.idlerpg.database.items.ItemType;
 
+/**
+ * The Class Rogue.
+ */
 public class Rogue extends Hero {
 
-	public Rogue(String name) {
+	/**
+	 * Instantiates a new rogue.
+	 * 
+	 * @param name
+	 *            the name
+	 */
+	public Rogue(final String name) {
 		super(name);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getAllowedItemTypes()
+	 */
 	@Override
-	protected void init() {
-		super.init();
-		this.addItem(ItemFactory.getWeapon("Knife"), 1);
+	public ArrayList<ItemType> getAllowedItemTypes() {
+		final ArrayList<ItemType> types = super.getAllowedItemTypes();
+		types.add(ItemType.DAGGER);
+		types.add(ItemType.MEDIUM_ARMOR);
+		types.add(ItemType.LIGHT_SHIELD);
+		return types;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getBaseAttributes()
+	 */
 	@Override
 	public EnumMap<Attribute, Integer> getBaseAttributes() {
 		final EnumMap<Attribute, Integer> attributes = new EnumMap<>(Attribute.class);
@@ -33,19 +51,12 @@ public class Rogue extends Hero {
 		return attributes;
 	}
 
-	@Override
-	public ArrayList<ItemType> getAllowedItemTypes() {
-		final ArrayList<ItemType> types = super.getAllowedItemTypes();
-		types.add(ItemType.DAGGER);
-		types.add(ItemType.MEDIUM_ARMOR);
-		types.add(ItemType.LIGHT_ARMOR);
-		types.add(ItemType.LIGHT_SHIELD);
-		return types;
-	}
-
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getAttributePriority()
+	 */
 	@Override
 	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
-		EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
+		final EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
 		res.put(Attribute.STRENGH, AttributePriority.HIGH);
 		res.put(Attribute.DEXTERITY, AttributePriority.HIGH);
 		res.put(Attribute.INTELLIGENCE, AttributePriority.NORMAL);
@@ -53,6 +64,15 @@ public class Rogue extends Hero {
 		res.put(Attribute.WISDOM, AttributePriority.LOW);
 		res.put(Attribute.CHARISMA, AttributePriority.LOW);
 		return res;
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#init()
+	 */
+	@Override
+	protected void init() {
+		super.init();
+		this.addItem(ItemFactory.getWeapon("Knife"), 1);
 	}
 
 }

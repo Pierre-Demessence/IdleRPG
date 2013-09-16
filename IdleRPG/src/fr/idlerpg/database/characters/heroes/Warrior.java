@@ -24,12 +24,6 @@ public class Warrior extends Hero {
 		super(name);
 	}
 
-	@Override
-	protected void init() {
-		super.init();
-		this.addItem(ItemFactory.getWeapon("ShortSword"), 1);
-	}
-
 	/* (non-Javadoc)
 	 * @see character.Hero#getAllowedItemTypes()
 	 */
@@ -38,7 +32,6 @@ public class Warrior extends Hero {
 		final ArrayList<ItemType> types = super.getAllowedItemTypes();
 		types.add(ItemType.SWORD);
 		types.add(ItemType.DAGGER);
-		types.add(ItemType.LIGHT_ARMOR);
 		types.add(ItemType.MEDIUM_ARMOR);
 		types.add(ItemType.HEAVY_ARMOR);
 		types.add(ItemType.LIGHT_SHIELD);
@@ -61,9 +54,12 @@ public class Warrior extends Hero {
 		return attributes;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#getAttributePriority()
+	 */
 	@Override
 	protected EnumMap<Attribute, AttributePriority> getAttributePriority() {
-		EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
+		final EnumMap<Attribute, AttributePriority> res = super.getAttributePriority();
 		res.put(Attribute.STRENGH, AttributePriority.HIGH);
 		res.put(Attribute.CONSTITUTION, AttributePriority.HIGH);
 		res.put(Attribute.DEXTERITY, AttributePriority.NORMAL);
@@ -71,6 +67,15 @@ public class Warrior extends Hero {
 		res.put(Attribute.WISDOM, AttributePriority.LOW);
 		res.put(Attribute.CHARISMA, AttributePriority.LOW);
 		return res;
+	}
+
+	/* (non-Javadoc)
+	 * @see fr.idlerpg.character.Hero#init()
+	 */
+	@Override
+	protected void init() {
+		super.init();
+		this.addItem(ItemFactory.getWeapon("ShortSword"), 1);
 	}
 
 }

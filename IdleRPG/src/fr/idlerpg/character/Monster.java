@@ -93,21 +93,28 @@ public abstract class Monster extends Character implements Cloneable {
 	 * 
 	 * @return the experience loot
 	 */
-	public abstract int getExperienceLoot();
+	public int getExperienceLoot() {
+		return (int) ( Math.pow(this.getLevel(), 2) * 10 );
+	}
 
 	/**
 	 * Gets the gold loot.
 	 * 
 	 * @return the gold loot
 	 */
-	public abstract int getGoldLoot();
+	public int getGoldLoot() {
+		return (int) ( Math.pow(this.getLevel(), 1.5) * 5 );
+	}
 
 	/**
 	 * Gets the loots.
 	 * 
 	 * @return the loots
 	 */
-	public abstract ArrayList<Loot> getLoots();
+	public ArrayList<Loot> getLoots() {
+		ArrayList<Loot> loots = new ArrayList<>();
+		return loots;
+	}
 
 	/* (non-Javadoc)
 	 * @see character.Character#getName()

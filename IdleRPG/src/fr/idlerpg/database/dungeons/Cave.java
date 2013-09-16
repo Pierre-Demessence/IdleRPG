@@ -5,6 +5,8 @@
 package fr.idlerpg.database.dungeons;
 
 import fr.idlerpg.database.characters.monsters.Gobelin;
+import fr.idlerpg.database.characters.monsters.Kobold;
+import fr.idlerpg.database.characters.monsters.Orc;
 import fr.idlerpg.location.Dungeon;
 
 /**
@@ -18,7 +20,8 @@ public class Cave extends Dungeon {
 	public Cave() {
 		super("Cave");
 		this.monsters.add(new Gobelin());
-		// this.monsters.add(new Orc());
+		this.monsters.add(new Orc());
+		this.monsters.add(new Kobold());
 	}
 
 }

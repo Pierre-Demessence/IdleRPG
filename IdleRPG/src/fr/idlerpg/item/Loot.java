@@ -42,7 +42,9 @@ public class Loot {
 	 * @return the item
 	 */
 	public Item getItem() {
-		return this.item;
+		if( this.item instanceof Equipment )
+			return ( (Equipment) this.item ).clone(true);
+		return (Item) this.item.clone();
 	}
 
 	/**
